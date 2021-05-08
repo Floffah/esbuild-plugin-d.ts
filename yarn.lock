@@ -198,6 +198,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/tmp@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@types/tmp@npm:0.2.0"
+  checksum: 8b3d8ce993db6129112690d2fc4a8615c8073bd47a3dbcb3384563077f6081c560912aa6c53bb46ec4b45fca1e26c2f811273534acdafdcc224fc49a8bd85467
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/eslint-plugin@npm:^4.22.1":
   version: 4.22.1
   resolution: "@typescript-eslint/eslint-plugin@npm:4.22.1"
@@ -1007,12 +1014,15 @@ __metadata:
   resolution: "esbuild-plugin-d.ts@workspace:."
   dependencies:
     "@types/node": ^15.0.2
+    "@types/tmp": ^0.2.0
     "@typescript-eslint/eslint-plugin": ^4.22.1
     "@typescript-eslint/parser": ^4.22.1
+    chalk: ^4.1.1
     esbuild: ^0.11.20
     eslint: ^7.26.0
     eslint-config-prettier: ^8.3.0
     npm-check-updates: ^11.5.10
+    tmp: ^0.2.1
     typescript: ^4.2.4
   peerDependencies:
     typescript: "*"
@@ -2952,7 +2962,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:^3.0.2":
+"rimraf@npm:^3.0.0, rimraf@npm:^3.0.2":
   version: 3.0.2
   resolution: "rimraf@npm:3.0.2"
   dependencies:
@@ -3308,6 +3318,15 @@ __metadata:
   version: 0.2.0
   resolution: "text-table@npm:0.2.0"
   checksum: 373904ce70524ba11ec7e1905c44fb92671132d5e0b0aba2fb48057161f8bf9cbf7f6178f0adf31810150cf44fb52c7b912dc722bff3fddf9688378596dbeb56
+  languageName: node
+  linkType: hard
+
+"tmp@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "tmp@npm:0.2.1"
+  dependencies:
+    rimraf: ^3.0.0
+  checksum: 13973825ff1c7aed3359bba97c146c860ebb5b1cbdca88387a2ff8bae704d2478b701cc3adc29b1461be292fed1e4ae56b378b6a0386bbab471ef32860e0a711
   languageName: node
   linkType: hard
 

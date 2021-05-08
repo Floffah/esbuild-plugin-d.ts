@@ -16,5 +16,5 @@ build({
     format: "cjs",
     entryPoints: ["./src/index.ts"],
     outfile: "./dist/index.cjs",
-    external: ["esbuild", "typescript"]
+    external: ["esbuild", "typescript", "chalk"]
 })

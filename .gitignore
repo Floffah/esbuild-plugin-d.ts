@@ -1,3 +1,5 @@
+test/out.cjs
+test/index.d.ts
 
 # Created by https://www.toptal.com/developers/gitignore/api/yarn,node,webstorm,jetbrains
 # Edit at https://www.toptal.com/developers/gitignore?templates=yarn,node,webstorm,jetbrains

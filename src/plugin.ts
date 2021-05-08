@@ -1,15 +1,24 @@
 import { getTSConfig } from "./config";
 import { Plugin } from "esbuild";
-import { readFileSync } from "fs";
 import ts from "typescript";
+import { existsSync, lstatSync } from "fs";
+import chalk from "chalk";
+import { getLogLevel, humanFileSize } from "./util";
+import { resolve } from "path";
+import { tmpdir } from "tmp";
 
 export const dtsPlugin: () => Plugin = () => ({
     name: "dts-plugin",
     async setup(build) {
+        const l = getLogLevel(build.initialOptions.logLevel);
         const conf = getTSConfig();
-        const copts = ts.convertCompilerOptionsFromJson(conf, process.cwd()).options;
+        const copts = ts.convertCompilerOptionsFromJson(conf.conf, process.cwd()).options;
         copts.declaration = true;
         copts.emitDeclarationOnly = true;
+        copts.incremental = true;
+        copts.tsBuildInfoFile = resolve(tmpdir, require(resolve(conf.loc, "../", "package.json")).name ?? "unnamed", ".esbuild", ".tsbuildinfo");
+        copts.listEmittedFiles = true;
+
 
         const host = ts.createCompilerHost(copts);
         let files: string[] = [];
@@ -17,17 +26,26 @@ export const dtsPlugin: () => Plugin = () => ({
         build.onLoad({ filter: /(\.tsx|\.ts)$/ }, async (args) => {
             files.push(args.path);
 
-            const file = readFileSync(args.path, "utf-8");
-
-            const compiled = ts.transpileModule(file, conf);
-            return {
-                contents: compiled.outputText,
-            };
+            return {};
         });
 
         build.onEnd(() => {
+            if (l.includes("info")) console.log();
+            const start = Date.now();
             const program = ts.createProgram(files, copts, host);
-            program.emit();
+            const emit = program.emit();
+            let final = "";
+            if (emit.emitSkipped || typeof emit.emittedFiles === "undefined") {
+                if (l.includes("warning")) console.log(chalk`  {yellow Typescript did not emit anything}`);
+            } else {
+                for (const emitted of emit.emittedFiles) {
+                    if (existsSync(emitted) && !emitted.endsWith(".tsbuildinfo")) {
+                        const stat = lstatSync(emitted);
+                        final += chalk`  {gray ${emitted}} {green ${humanFileSize(stat.size)}}\n`;
+                    }
+                }
+            }
+            if (l.includes("info")) console.log(final + chalk`\n{green Finished compiling declarations in ${Date.now() - start}ms}`);
         });
     },
 });
