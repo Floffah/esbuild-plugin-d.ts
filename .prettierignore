@@ -1,0 +1,14 @@
+deps/
+_build/
+.elixir_ls
+assets
+priv
+node_modules
+dist
+types
+assets
+data
+.storybook
+public
+build
+docs
