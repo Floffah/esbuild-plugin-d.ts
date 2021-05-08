@@ -16,7 +16,10 @@ export const dtsPlugin: () => Plugin = () => ({
         copts.declaration = true;
         copts.emitDeclarationOnly = true;
         copts.incremental = true;
-        copts.tsBuildInfoFile = resolve(tmpdir, require(resolve(conf.loc, "../", "package.json")).name ?? "unnamed", ".esbuild", ".tsbuildinfo");
+        const pjloc = resolve(conf.loc, "../", "package.json");
+        if (existsSync(pjloc)) {
+            copts.tsBuildInfoFile = resolve(tmpdir, require(pjloc).name ?? "unnamed", ".esbuild", ".tsbuildinfo");
+        }
         copts.listEmittedFiles = true;
 
 
