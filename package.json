@@ -4,6 +4,9 @@
   "main": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "type": "commonjs",
+  "files": [
+    "dist", "LICENSE"
+  ],
   "repository": "https://github.com/Floffah/esbuild-plugin-d.ts.git",
   "author": "Floffah <therealfloffah@gmail.com>",
   "license": "MIT",
