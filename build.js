@@ -1,6 +1,6 @@
-const {build} = require("esbuild");
+const {build} = require("estrella");
 
-const dev = process.argv.includes("--dev") || process.argv.includes("-d");
+const dev = process.argv.includes("--watch") || process.argv.includes("--dev");
 
 build({
     bundle: true,
@@ -16,5 +16,6 @@ build({
     format: "cjs",
     entryPoints: ["./src/index.ts"],
     outfile: "./dist/index.cjs",
-    external: ["esbuild", "typescript", "chalk", "tmp"]
+    external: ["esbuild", "typescript", "chalk", "tmp"],
+    tslint: false,
 })

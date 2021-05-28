@@ -8,3 +8,7 @@ export function getTSConfig(conf?: string, wd = process.cwd()): {loc: string, co
     if (c.error) throw c.error;
     else return {loc: f, conf: c.config};
 }
+
+export interface DTSPluginOpts {
+    outDir?: string;
+}

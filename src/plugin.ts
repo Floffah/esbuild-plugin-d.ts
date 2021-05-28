@@ -1,4 +1,4 @@
-import { getTSConfig } from "./config";
+import { DTSPluginOpts, getTSConfig } from "./config";
 import { Plugin } from "esbuild";
 import ts from "typescript";
 import { existsSync, lstatSync } from "fs";
@@ -7,15 +7,16 @@ import { getLogLevel, humanFileSize } from "./util";
 import { resolve } from "path";
 import { tmpdir } from "tmp";
 
-export const dtsPlugin: () => Plugin = () => ({
+export const dtsPlugin = (opts: DTSPluginOpts = {}) => ({
     name: "dts-plugin",
     async setup(build) {
         const l = getLogLevel(build.initialOptions.logLevel);
         const conf = getTSConfig();
-        const copts = ts.convertCompilerOptionsFromJson(conf.conf, process.cwd()).options;
+        const copts = ts.convertCompilerOptionsFromJson(conf.conf.compilerOptions, process.cwd()).options;
         copts.declaration = true;
         copts.emitDeclarationOnly = true;
         copts.incremental = true;
+        if(!copts.declarationDir) copts.declarationDir = opts.outDir ?? build.initialOptions.outdir ?? copts.outDir;
         const pjloc = resolve(conf.loc, "../", "package.json");
         if (existsSync(pjloc)) {
             copts.tsBuildInfoFile = resolve(tmpdir, require(pjloc).name ?? "unnamed", ".esbuild", ".tsbuildinfo");
@@ -51,4 +52,4 @@ export const dtsPlugin: () => Plugin = () => ({
             if (l.includes("info")) console.log(final + chalk`\n{green Finished compiling declarations in ${Date.now() - start}ms}`);
         });
     },
-});
+}) as Plugin ;

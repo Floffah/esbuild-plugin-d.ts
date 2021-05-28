@@ -1,6 +1,6 @@
 {
   "name": "esbuild-plugin-d.ts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "type": "commonjs",
@@ -16,14 +16,16 @@
     "@types/tmp": "^0.2.0",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
+    "esbuild": "^0.12.5",
     "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
+    "estrella": "^1.4.1",
     "npm-check-updates": "^11.5.13",
     "typescript": "^4.2.4"
   },
   "scripts": {
-    "prepack": "node esbuild && tsc",
-    "test": "node test/esbuild.js"
+    "prepack": "node build && tsc",
+    "test": "cd test && node esbuild.js && cd ../"
   },
   "peerDependencies": {
     "typescript": "*"

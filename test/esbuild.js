@@ -8,7 +8,7 @@ build({
     color: true,
     logLevel: "info",
     format: "cjs",
-    entryPoints: ["./test/index.ts"],
-    outfile: "./test/out.cjs",
+    entryPoints: ["./index.ts"],
+    outfile: "./dist/out.cjs",
     plugins: [dtsPlugin()]
 })
