@@ -1,3 +1,5 @@
+When you're free, check out [this discussion](https://github.com/Floffah/esbuild-plugin-d.ts/discussions/3)
+
 # ESBuild Plugin D.TS
 
 ESBuild plugin for compiling typescript declarations along with your js
