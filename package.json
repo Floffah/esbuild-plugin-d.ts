@@ -12,15 +12,15 @@
   "author": "Floffah <therealfloffah@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^15.6.1",
+    "@types/node": "^15.12.4",
     "@types/tmp": "^0.2.0",
-    "@typescript-eslint/eslint-plugin": "^4.25.0",
-    "@typescript-eslint/parser": "^4.25.0",
-    "esbuild": "^0.12.5",
-    "eslint": "^7.27.0",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "esbuild": "^0.12.9",
+    "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",
     "estrella": "^1.4.1",
-    "npm-check-updates": "^11.5.13",
+    "npm-check-updates": "^11.7.1",
     "typescript": "^4.2.4"
   },
   "scripts": {

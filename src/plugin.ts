@@ -1,7 +1,7 @@
 import { DTSPluginOpts, getTSConfig } from "./config";
 import { Plugin } from "esbuild";
 import ts from "typescript";
-import { existsSync, lstatSync } from "fs";
+import { existsSync, lstatSync, readFileSync } from "fs";
 import chalk from "chalk";
 import { getLogLevel, humanFileSize } from "./util";
 import { resolve } from "path";
@@ -12,7 +12,18 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) => ({
     async setup(build) {
         const l = getLogLevel(build.initialOptions.logLevel);
         const conf = getTSConfig();
-        const copts = ts.convertCompilerOptionsFromJson(conf.conf.compilerOptions, process.cwd()).options;
+        let finalconf = conf.conf;
+        if (Object.prototype.hasOwnProperty.call(conf.conf, "extends")) {
+            const extendedfile = readFileSync(resolve(conf.loc, conf.conf.extends), "utf-8");
+            const extended = JSON.parse(extendedfile);
+            if (Object.prototype.hasOwnProperty.call(extended, "compilerOptions") && Object.prototype.hasOwnProperty.call(finalconf, "compilerOptions")) {
+                finalconf.compilerOptions = {
+                    ...extended.compilerOptions,
+                    ...finalconf.compilerOptions
+                }
+            }
+        }
+        const copts = ts.convertCompilerOptionsFromJson(finalconf.compilerOptions, process.cwd()).options;
         copts.declaration = true;
         copts.emitDeclarationOnly = true;
         copts.incremental = true;
