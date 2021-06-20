@@ -5,3 +5,6 @@ export function someFunction(a: string, b: number): string {
 export type SomeType = "someValue" | "anotherValue";
 
 export const someVar: SomeType = "someValue";
+
+
+

@@ -2,15 +2,15 @@ When you're free, check out [this discussion](https://github.com/Floffah/esbuild
 
 # ESBuild Plugin D.TS
 
-ESBuild plugin for compiling typescript declarations along with your js
+ESBuild plugin for compiling typescript declarations along with your outputted js
 
 ## WARNING
 
-This plugin was just made to make it easier to use. It slows down ESBuild to over 3 seconds of compile time just for my small test file
+This plugin was made to make it easier to build declarations without running two commands simultaneously. It slows down ESBuild to over 1-2 seconds of compile time just for my small test file.
 
 ## Config
 
-The plugin uses all built in typescript methods which it will use to find your tsconfig.json file. You do not need to enable declaration or emit declarations only but you probably do want to set declarationDir
+The plugin uses all built in typescript methods which it will use to find your tsconfig.json file. You do not need to enable declaration or emit declarations but you probably do want to set outDir or declarationDir
 
 ## Usage
 ```js

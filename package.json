@@ -1,6 +1,6 @@
 {
   "name": "esbuild-plugin-d.ts",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "type": "commonjs",
@@ -21,7 +21,8 @@
     "eslint-config-prettier": "^8.3.0",
     "estrella": "^1.4.1",
     "npm-check-updates": "^11.7.1",
-    "typescript": "^4.2.4"
+    "prettier": "^2.3.1",
+    "typescript": "^4.3.4"
   },
   "scripts": {
     "prepack": "node build && tsc",

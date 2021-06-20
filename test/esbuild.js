@@ -10,5 +10,6 @@ build({
     format: "cjs",
     entryPoints: ["./index.ts"],
     outfile: "./dist/out.cjs",
-    plugins: [dtsPlugin()]
+    plugins: [dtsPlugin()],
+    watch: true
 })

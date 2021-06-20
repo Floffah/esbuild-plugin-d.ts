@@ -5,7 +5,7 @@ module.exports = {
     extends: [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
-        "prettier"
+        "prettier",
     ],
     rules: {
         "@typescript-eslint/explicit-module-boundary-types": "off",
@@ -20,6 +20,7 @@ module.exports = {
                 ignoreRestSiblings: false,
             },
         ],
+        "@typescript-eslint/no-var-requires": "warn",
     },
     settings: {
         prettier: true,
