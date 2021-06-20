@@ -1,10 +1,10 @@
-const {build} = require("estrella");
+const { build } = require("estrella");
 
 const dev = process.argv.includes("--watch") || process.argv.includes("--dev");
 
 build({
     bundle: true,
-    target: "node16.0",
+    target: "node12",
     platform: "node",
     watch: dev,
     color: true,
@@ -18,4 +18,4 @@ build({
     outfile: "./dist/index.cjs",
     external: ["esbuild", "typescript", "chalk", "tmp"],
     tslint: false,
-})
+});

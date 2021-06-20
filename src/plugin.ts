@@ -4,9 +4,8 @@ import ts from "typescript";
 import { existsSync, lstatSync, readFileSync } from "fs";
 import chalk from "chalk";
 import { getLogLevel, humanFileSize } from "./util";
-import { resolve } from "path";
+import { resolve, basename } from "path";
 import { tmpdir } from "tmp";
-import { basename } from "estrella";
 
 export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
     ({

@@ -1,6 +1,6 @@
 {
   "name": "esbuild-plugin-d.ts",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "type": "commonjs",
@@ -23,6 +23,9 @@
     "npm-check-updates": "^11.7.1",
     "prettier": "^2.3.1",
     "typescript": "^4.3.4"
+  },
+  "engines": {
+    "node": ">=12.0.0"
   },
   "scripts": {
     "prepack": "node build && tsc",
