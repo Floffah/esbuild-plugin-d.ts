@@ -27,7 +27,7 @@
     "node": ">=12.0.0"
   },
   "scripts": {
-    "prepack": "node build && tsc",
+    "prepare": "yarn tsup",
     "test": "cd test && node esbuild.js && cd ../"
   },
   "peerDependencies": {
