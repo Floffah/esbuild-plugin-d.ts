@@ -166,6 +166,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jju@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "@types/jju@npm:1.4.1"
+  checksum: ae057f673274a74b9670aa7a224c6df508f63dbc467e3635ecabf61d0a09a285550298096470fd51d309345c7fdf111ae88196e2ae7bf8135dabeebd4a2997e5
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.7":
   version: 7.0.7
   resolution: "@types/json-schema@npm:7.0.7"
@@ -1070,6 +1077,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "esbuild-plugin-d.ts@workspace:."
   dependencies:
+    "@types/jju": ^1.4.1
     "@types/node": ^15.12.4
     "@types/tmp": ^0.2.0
     "@typescript-eslint/eslint-plugin": ^4.27.0
@@ -1078,6 +1086,7 @@ __metadata:
     esbuild: ^0.12.9
     eslint: ^7.29.0
     eslint-config-prettier: ^8.3.0
+    jju: ^1.4.0
     npm-check-updates: ^11.7.1
     prettier: ^2.3.1
     tmp: ^0.2.1
@@ -2047,7 +2056,7 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"jju@npm:^1.1.0":
+"jju@npm:^1.1.0, jju@npm:^1.4.0":
   version: 1.4.0
   resolution: "jju@npm:1.4.0"
   checksum: a58023d40e8e262366e95175dec782c7dc6ad94f2ad1fafe91f675ca6177505b4a8e679cec49c800acb8ceab9391856c7c03e871b30ef0590115d081fad814b9

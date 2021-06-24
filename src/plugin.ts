@@ -4,8 +4,9 @@ import ts from "typescript";
 import { existsSync, lstatSync, readFileSync } from "fs";
 import chalk from "chalk";
 import { getLogLevel, humanFileSize } from "./util";
-import { resolve, basename } from "path";
+import { resolve, basename, dirname } from "path";
 import { tmpdir } from "tmp";
+import {parse} from "jju"
 
 export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
     ({
@@ -16,10 +17,10 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
             const finalconf = conf.conf;
             if (Object.prototype.hasOwnProperty.call(conf.conf, "extends")) {
                 const extendedfile = readFileSync(
-                    resolve(conf.loc, conf.conf.extends),
+                    resolve(dirname(conf.loc), conf.conf.extends),
                     "utf-8",
                 );
-                const extended = JSON.parse(extendedfile);
+                const extended = parse(extendedfile);
                 if (
                     Object.prototype.hasOwnProperty.call(
                         extended,

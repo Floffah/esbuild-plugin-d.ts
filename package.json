@@ -1,6 +1,6 @@
 {
   "name": "esbuild-plugin-d.ts",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "commonjs",
@@ -12,6 +12,7 @@
   "author": "Floffah <therealfloffah@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/jju": "^1.4.1",
     "@types/node": "^15.12.4",
     "@types/tmp": "^0.2.0",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
@@ -28,13 +29,15 @@
   },
   "scripts": {
     "prepare": "yarn tsup",
-    "test": "cd test && node esbuild.js && cd ../"
+    "test": "cd test && node esbuild.js && cd ../",
+    "testcycle": "yarn prepare && yarn test"
   },
   "peerDependencies": {
     "typescript": "*"
   },
   "dependencies": {
     "chalk": "^4.1.1",
+    "jju": "^1.4.0",
     "tmp": "^0.2.1",
     "tsup": "^4.11.2"
   }
