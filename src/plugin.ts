@@ -12,7 +12,7 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
         name: "dts-plugin",
         async setup(build) {
             const l = getLogLevel(build.initialOptions.logLevel);
-            const conf = getTSConfig();
+            const conf = getTSConfig(opts.tsconfig);
             const finalconf = conf.conf;
             if (Object.prototype.hasOwnProperty.call(conf.conf, "extends")) {
                 const extendedfile = readFileSync(
