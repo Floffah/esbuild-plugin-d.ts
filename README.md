@@ -8,7 +8,7 @@ ESBuild plugin for compiling typescript declarations along with your outputted j
 
 This plugin was made to make it easier to build declarations without running two commands simultaneously. It slows down ESBuild to over 1-2 seconds of compile time just for my small test file.
 
-Good (faster, and more stable) alternatives include [estrella](https://npm.im/estrella) and my favourite (+ what this project uses), [tsup](https://npm.im/tsup)
+Good (faster, and more stable) alternatives include [estrella](https://npm.im/estrella) and my favourite (+ what this project uses), [tsup](https://npm.im/tsup) which are both esbuild wrappers so they dont differ much from esbuild + this apart from being more stable and configurable
 
 ## Config
 
