@@ -12,16 +12,16 @@
   "author": "Floffah <therealfloffah@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/jju": "^1.4.1",
-    "@types/node": "^15.12.4",
-    "@types/tmp": "^0.2.0",
-    "@typescript-eslint/eslint-plugin": "^4.27.0",
-    "@typescript-eslint/parser": "^4.27.0",
-    "esbuild": "^0.12.9",
-    "eslint": "^7.29.0",
+    "@types/jju": "^1.4.2",
+    "@types/node": "^16.11.12",
+    "@types/tmp": "^0.2.2",
+    "@typescript-eslint/eslint-plugin": "^5.6.0",
+    "@typescript-eslint/parser": "^5.6.0",
+    "esbuild": "^0.14.2",
+    "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.3.0",
-    "npm-check-updates": "^11.7.1",
-    "prettier": "^2.3.1",
+    "npm-check-updates": "^12.0.3",
+    "prettier": "^2.5.1",
     "typescript": "^4.3.4"
   },
   "engines": {
@@ -36,9 +36,9 @@
     "typescript": "*"
   },
   "dependencies": {
-    "chalk": "^4.1.1",
+    "chalk": "^5.0.0",
     "jju": "^1.4.0",
     "tmp": "^0.2.1",
-    "tsup": "^4.11.2"
+    "tsup": "^5.11.1"
   }
 }
