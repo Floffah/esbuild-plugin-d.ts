@@ -1,6 +1,6 @@
 {
   "name": "esbuild-plugin-d.ts",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "commonjs",
@@ -22,7 +22,7 @@
     "eslint-config-prettier": "^8.3.0",
     "npm-check-updates": "^12.0.3",
     "prettier": "^2.5.1",
-    "typescript": "^4.3.4"
+    "typescript": "^4.5.3"
   },
   "engines": {
     "node": ">=12.0.0"
@@ -30,13 +30,14 @@
   "scripts": {
     "prepare": "yarn tsup",
     "test": "cd test && node esbuild.js && cd ../",
-    "testcycle": "yarn prepare && yarn test"
+    "testcycle": "yarn prepare && yarn test",
+    "deps": "yarn ncu -u --reject chalk"
   },
   "peerDependencies": {
     "typescript": "*"
   },
   "dependencies": {
-    "chalk": "^5.0.0",
+    "chalk": "4.x",
     "jju": "^1.4.0",
     "tmp": "^0.2.1",
     "tsup": "^5.11.1"

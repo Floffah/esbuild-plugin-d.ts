@@ -6,15 +6,18 @@ import chalk from "chalk";
 import { getLogLevel, humanFileSize } from "./util";
 import { resolve, basename, dirname } from "path";
 import { tmpdir } from "tmp";
-import {parse} from "jju"
+import { parse } from "jju";
 
 export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
     ({
         name: "dts-plugin",
         async setup(build) {
+            // context
             const l = getLogLevel(build.initialOptions.logLevel);
             const conf = getTSConfig(opts.tsconfig);
             const finalconf = conf.conf;
+
+            // get extended config
             if (Object.prototype.hasOwnProperty.call(conf.conf, "extends")) {
                 const extendedfile = readFileSync(
                     resolve(dirname(conf.loc), conf.conf.extends),
@@ -37,6 +40,8 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                     };
                 }
             }
+
+            // get and alter compiler options
             const copts = ts.convertCompilerOptionsFromJson(
                 finalconf.compilerOptions,
                 process.cwd(),
@@ -47,6 +52,8 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
             if (!copts.declarationDir)
                 copts.declarationDir =
                     opts.outDir ?? build.initialOptions.outdir ?? copts.outDir;
+
+            // auto incremental
             const pjloc = resolve(conf.loc, "../", "package.json");
             if (existsSync(pjloc)) {
                 copts.tsBuildInfoFile = resolve(
@@ -58,14 +65,11 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
             }
             copts.listEmittedFiles = true;
 
-            const host = ts.createCompilerHost(copts);
+            // ts compiler stuff
+            const host = ts.createIncrementalCompilerHost(copts);
             const files: string[] = [];
-            const program = ts.createIncrementalProgram({
-                options: copts,
-                host: host,
-                rootNames: [],
-            });
 
+            // get all ts files
             build.onLoad({ filter: /(\.tsx|\.ts)$/ }, async (args) => {
                 files.push(args.path);
 
@@ -79,14 +83,20 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 return {};
             });
 
+            // finish compilation
             build.onEnd(() => {
                 //if (l.includes("info")) console.log();
-                const finalprogram = ts.createProgram(
-                    files,
-                    copts,
-                    host,
-                    program.getProgram(),
-                );
+                // const finalprogram = ts.createProgram(
+                //     files,
+                //     copts,
+                //     host,
+                //     program.getProgram(),
+                // );
+                const finalprogram = ts.createIncrementalProgram({
+                    options: copts,
+                    host: host,
+                    rootNames: files,
+                });
                 const start = Date.now();
                 const emit = finalprogram.emit();
                 let final = "";

@@ -1,4 +1,4 @@
-import { Options } from "tsup"
+import { Options } from "tsup";
 
 export const tsup: Options = {
     target: "node12",
@@ -6,5 +6,6 @@ export const tsup: Options = {
     external: ["esbuild", "typescript", "chalk", "tmp"],
     dts: true,
     clean: true,
-    sourcemap: true
+    sourcemap: true,
+    splitting: false,
 };
