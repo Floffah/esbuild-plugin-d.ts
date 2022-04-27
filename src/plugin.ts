@@ -66,7 +66,7 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
             copts.listEmittedFiles = true;
 
             // ts compiler stuff
-            const host = ts.createIncrementalCompilerHost(copts);
+            const host = copts.incremental ? ts.createIncrementalCompilerHost(copts) : ts.createCompilerHost(copts);
             const files: string[] = [];
 
             // get all ts files
@@ -85,20 +85,15 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
 
             // finish compilation
             build.onEnd(() => {
-                //if (l.includes("info")) console.log();
-                // const finalprogram = ts.createProgram(
-                //     files,
-                //     copts,
-                //     host,
-                //     program.getProgram(),
-                // );
-                const finalprogram = ts.createIncrementalProgram({
+                const finalprogram = copts.incremental ? ts.createIncrementalProgram({
                     options: copts,
                     host: host,
                     rootNames: files,
-                });
+                }) : ts.createProgram(files, copts, host);
+
                 const start = Date.now();
                 const emit = finalprogram.emit();
+
                 let final = "";
                 if (
                     emit.emitSkipped ||
