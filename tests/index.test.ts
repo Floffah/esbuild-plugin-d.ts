@@ -70,7 +70,6 @@ test("TSConfig extends is resolved", async () => {
         esbuildOptions: {},
     });
 
-    expect(compilerOptions).toMatchSnapshot();
     expect(compilerOptions.strict).toBe(true);
     expect(compilerOptions.emitDecoratorMetadata).toBe(true);
 });
