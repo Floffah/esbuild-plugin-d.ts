@@ -15,7 +15,8 @@
     "node": ">=12.0.0"
   },
   "scripts": {
-    "prepare": "yarn tsup",
+    "prepare": "yarn build",
+    "build": "tsup",
     "test": "jest",
     "deps": "yarn ncu -u --reject chalk"
   },
