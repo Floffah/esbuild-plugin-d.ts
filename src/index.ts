@@ -1,8 +1,4 @@
-import { getTSConfig } from "./config";
-import { dtsPlugin } from "./plugin";
-import { getLogLevel, humanFileSize } from "./util";
-
-export { dtsPlugin };
-export const util = {
-    humanFileSize, getLogLevel, getTSConfig,
-};
+export * from "./lib";
+export * from "./types";
+export * from "./plugin";
+export { dtsPlugin as default } from "./plugin";

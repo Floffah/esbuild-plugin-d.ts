@@ -1,81 +1,46 @@
-import { DTSPluginOpts, getTSConfig } from "./config";
-import { Plugin } from "esbuild";
-import ts from "typescript";
-import { existsSync, lstatSync, readFileSync } from "fs";
 import chalk from "chalk";
-import { getLogLevel, humanFileSize } from "./util";
-import { resolve, basename, dirname } from "path";
-import { tmpdir } from "tmp";
-import { parse } from "jju";
+import { Plugin } from "esbuild";
+import { existsSync, lstatSync } from "fs";
+import { resolve } from "path";
+import ts from "typescript";
+
+import { humanizeFileSize } from "@/lib";
+import { getCompilerOptions } from "@/lib/getCompilerOptions";
+import { getTSConfig } from "@/lib/getTSConfig";
+import { createLogger } from "@/lib/logger";
+import { DTSPluginOpts } from "@/types/options";
 
 export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
     ({
         name: "dts-plugin",
         async setup(build) {
-            // context
-            const l = getLogLevel(build.initialOptions.logLevel);
-            const conf = getTSConfig(opts.tsconfig);
-            const finalconf = conf.conf;
+            const log = createLogger(build.initialOptions.logLevel);
 
-            // get extended config
-            if (Object.prototype.hasOwnProperty.call(conf.conf, "extends")) {
-                const extendedfile = readFileSync(
-                    resolve(dirname(conf.loc), conf.conf.extends),
-                    "utf-8",
-                );
-                const extended = parse(extendedfile);
-                if (
-                    Object.prototype.hasOwnProperty.call(
-                        extended,
-                        "compilerOptions",
-                    ) &&
-                    Object.prototype.hasOwnProperty.call(
-                        finalconf,
-                        "compilerOptions",
-                    )
-                ) {
-                    finalconf.compilerOptions = {
-                        ...extended.compilerOptions,
-                        ...finalconf.compilerOptions,
-                    };
-                }
-            }
+            const config =
+                opts.tsconfig && typeof opts.tsconfig !== "string"
+                    ? opts.tsconfig
+                    : getTSConfig({
+                          configPath: opts.tsconfig,
+                      });
 
-            // get and alter compiler options
-            const copts = ts.convertCompilerOptionsFromJson(
-                finalconf.compilerOptions,
-                process.cwd(),
-            ).options;
-            copts.declaration = true;
-            copts.emitDeclarationOnly = true;
-            copts.incremental = true;
-            if (!copts.declarationDir)
-                copts.declarationDir =
-                    opts.outDir ?? build.initialOptions.outdir ?? copts.outDir;
+            const compilerOptions = getCompilerOptions({
+                tsconfig: config,
+                pluginOptions: opts,
+                esbuildOptions: build.initialOptions,
+            });
 
-            // auto incremental
-            const pjloc = resolve(conf.loc, "../", "package.json");
-            if (existsSync(pjloc)) {
-                copts.tsBuildInfoFile = resolve(
-                    tmpdir,
-                    require(pjloc).name ?? "unnamed",
-                    ".esbuild",
-                    ".tsbuildinfo",
-                );
-            }
-            copts.listEmittedFiles = true;
+            const compilerHost = compilerOptions.incremental
+                ? ts.createIncrementalCompilerHost(compilerOptions)
+                : ts.createCompilerHost(compilerOptions);
 
-            // ts compiler stuff
-            const host = copts.incremental ? ts.createIncrementalCompilerHost(copts) : ts.createCompilerHost(copts);
-            const files: string[] = [];
+            const inputFiles: string[] = [];
 
-            // get all ts files
             build.onLoad({ filter: /(\.tsx|\.ts)$/ }, async (args) => {
-                files.push(args.path);
+                inputFiles.push(args.path);
 
-                host.getSourceFile(
+                compilerHost.getSourceFile(
                     args.path,
-                    copts.target ?? ts.ScriptTarget.Latest,
+                    compilerOptions.target ?? ts.ScriptTarget.Latest,
                     (m) => console.log(m),
                     true,
                 );
@@ -83,50 +48,58 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 return {};
             });
 
-            // finish compilation
             build.onEnd(() => {
-                const finalprogram = copts.incremental ? ts.createIncrementalProgram({
-                    options: copts,
-                    host: host,
-                    rootNames: files,
-                }) : ts.createProgram(files, copts, host);
+                let compilerProgram;
 
-                const start = Date.now();
-                const emit = finalprogram.emit();
-
-                let final = "";
-                if (
-                    emit.emitSkipped ||
-                    typeof emit.emittedFiles === "undefined"
-                ) {
-                    if (l.includes("warning"))
-                        console.log(
-                            chalk`  {yellow Typescript did not emit anything}`,
-                        );
+                if (compilerOptions.incremental) {
+                    compilerProgram = ts.createIncrementalProgram({
+                        options: compilerOptions,
+                        host: compilerHost,
+                        rootNames: inputFiles,
+                    });
                 } else {
-                    for (const emitted of emit.emittedFiles) {
+                    compilerProgram = ts.createProgram(
+                        inputFiles,
+                        compilerOptions,
+                        compilerHost,
+                    );
+                }
+
+                const startTime = Date.now();
+                const emitResult = compilerProgram.emit();
+
+                if (
+                    emitResult.emitSkipped ||
+                    typeof emitResult.emittedFiles === "undefined"
+                ) {
+                    log.info(chalk`{yellow No declarations emitted}`);
+                } else {
+                    for (const emittedFile of emitResult.emittedFiles) {
+                        const emittedPath = resolve(emittedFile);
+
                         if (
-                            existsSync(emitted) &&
-                            !emitted.endsWith(".tsbuildinfo")
+                            existsSync(emittedPath) &&
+                            emittedPath !== compilerOptions.tsBuildInfoFile
                         ) {
-                            const stat = lstatSync(emitted);
-                            final += chalk`  ${resolve(emitted)
+                            const stat = lstatSync(emittedPath);
+
+                            const pathFromContentRoot = emittedPath
                                 .replace(resolve(process.cwd()), "")
-                                .replace(/^[\\/]/, "")
-                                .replace(
-                                    basename(emitted),
-                                    chalk`{bold ${basename(emitted)}}`,
-                                )} {cyan ${humanFileSize(stat.size)}}\n`;
+                                .replace(/^[\\/]/, "");
+                            const humanFileSize = humanizeFileSize(stat.size);
+
+                            log.info(
+                                chalk`  {bold ${pathFromContentRoot}} {cyan ${humanFileSize}}`,
+                            );
                         }
                     }
                 }
-                if (l.includes("info"))
-                    console.log(
-                        final +
-                            chalk`\n{green Finished compiling declarations in ${
-                                Date.now() - start
-                            }ms}`,
-                    );
+
+                log.info(
+                    chalk`{green Finished compiling declarations in ${
+                        Date.now() - startTime
+                    }ms}`,
+                );
             });
         },
-    } as Plugin);
+    }) as Plugin;
