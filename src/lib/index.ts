@@ -1,2 +1,3 @@
+export * from "./getCompilerOptions";
 export * from "./getTSConfig";
-export { humanizeFileSize } from "@/lib/humanizeFileSize";
+export * from "./humanizeFileSize";
