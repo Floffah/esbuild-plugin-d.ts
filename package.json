@@ -21,6 +21,10 @@
     "deps": "yarn ncu -u --reject chalk",
     "publish:local": "export $(cat .env | xargs) && yarn semantic-release --dry-run"
   },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "peerDependencies": {
     "typescript": "*"
   },
