@@ -26,8 +26,7 @@
   },
   "dependencies": {
     "chalk": "4.1.2",
-    "lodash.merge": "^4.6.2",
-    "tmp": "^0.2.1"
+    "lodash.merge": "^4.6.2"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

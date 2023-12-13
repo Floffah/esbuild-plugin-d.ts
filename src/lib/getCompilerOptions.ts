@@ -1,7 +1,6 @@
 import { createHash } from "crypto";
 import { BuildOptions } from "esbuild";
 import { resolve } from "path";
-import { tmpdir } from "tmp";
 import ts from "typescript";
 
 import { DTSPluginOpts } from "@/types";
@@ -36,8 +35,13 @@ export function getCompilerOptions(opts: {
             )
             .digest("hex");
 
+        const cacheDir = resolve(
+            require.resolve("esbuild"),
+            "../.cache/esbuild-plugin-d.ts",
+        );
+
         compilerOptions.tsBuildInfoFile = resolve(
-            opts.pluginOptions.buildInfoDir ?? tmpdir,
+            opts.pluginOptions.buildInfoDir ?? cacheDir,
             `esbuild-plugin-dts-${configHash}.tsbuildinfo`,
         );
     }
