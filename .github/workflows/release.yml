@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-      - next
+      - canary
 
 permissions:
   contents: read # for checkout
@@ -25,6 +25,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
+          cache: yarn
           node-version: "lts/*"
       - name: Install dependencies
         run: yarn install --immutable
