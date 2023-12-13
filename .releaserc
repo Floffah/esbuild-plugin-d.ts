@@ -3,7 +3,8 @@
     "main",
     {
       "name": "canary",
-      "prerelease": true
+      "prerelease": true,
+      "channel": "canary"
     }
   ]
 }
