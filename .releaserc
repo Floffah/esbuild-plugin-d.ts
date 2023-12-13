@@ -2,7 +2,7 @@
   "branches": [
     "main",
     {
-      "name": "next",
+      "name": "canary",
       "prerelease": true
     }
   ]

@@ -1,5 +1,4 @@
-import { dtsPlugin, resolveTSConfig } from "../src";
-import { getCompilerOptions } from "../src/lib/getCompilerOptions";
+import { dtsPlugin, getCompilerOptions, resolveTSConfig } from "../src";
 import { build } from "esbuild";
 import { existsSync, readFileSync } from "fs";
 import { rmSync } from "node:fs";
