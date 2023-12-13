@@ -6,8 +6,8 @@ import ts from "typescript";
 
 import { humanizeFileSize } from "@/lib";
 import { getCompilerOptions } from "@/lib/getCompilerOptions";
-import { getTSConfig } from "@/lib/getTSConfig";
 import { createLogger } from "@/lib/logger";
+import { resolveTSConfig } from "@/lib/resolveTSConfig";
 import { DTSPluginOpts } from "@/types/options";
 
 export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
@@ -19,7 +19,7 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
             const config =
                 opts.tsconfig && typeof opts.tsconfig !== "string"
                     ? opts.tsconfig
-                    : getTSConfig({
+                    : resolveTSConfig({
                           configPath: opts.tsconfig,
                       });
 

@@ -1,6 +1,6 @@
 {
   "name": "esbuild-plugin-d.ts",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "main": "./dist/index.js",
   "exports": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@tsconfig/node21": "^21.0.0",
     "@types/jest": "^29.5.11",
     "@types/lodash.merge": "^4",
     "@types/node": "^20.10.4",

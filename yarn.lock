@@ -1382,6 +1382,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsconfig/node21@npm:^21.0.0":
+  version: 21.0.0
+  resolution: "@tsconfig/node21@npm:21.0.0"
+  checksum: 5d7e2c5dcacc507859950d9dc9ed79fde5f9702f6ca5c48bc30883d482e3c1a77758c513e1eb8ae23d27ac3863e647f4af50117eb538e81dd2d57f4958de14a9
+  languageName: node
+  linkType: hard
+
 "@tufjs/canonical-json@npm:1.0.0":
   version: 1.0.0
   resolution: "@tufjs/canonical-json@npm:1.0.0"
@@ -2771,6 +2778,7 @@ __metadata:
   dependencies:
     "@jest/globals": "npm:^29.7.0"
     "@trivago/prettier-plugin-sort-imports": "npm:^4.3.0"
+    "@tsconfig/node21": "npm:^21.0.0"
     "@types/jest": "npm:^29.5.11"
     "@types/lodash.merge": "npm:^4"
     "@types/node": "npm:^20.10.4"

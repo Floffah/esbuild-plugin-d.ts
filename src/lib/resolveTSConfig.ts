@@ -3,7 +3,15 @@ import merge from "lodash.merge";
 import { dirname, resolve } from "path";
 import ts from "typescript";
 
-export function getTSConfig(opts: {
+function resolveModulePath(path: string) {
+    try {
+        return require.resolve(path);
+    } catch (e) {
+        return undefined;
+    }
+}
+
+export function resolveTSConfig(opts: {
     configPath?: string;
     configName?: string;
     searchPath?: string;
@@ -28,12 +36,14 @@ export function getTSConfig(opts: {
     );
 
     if (config.config.extends) {
-        const parentConfig = getTSConfig({
+        const parentConfig = resolveTSConfig({
             ...opts,
-            configPath: resolve(dirname(configPath), config.config.extends),
+            configPath:
+                resolveModulePath(config.config.extends) ??
+                resolve(dirname(configPath), config.config.extends),
         });
 
-        config.config = merge(config.config, parentConfig);
+        config.config = merge(parentConfig, config.config);
     }
 
     if (config.error) {

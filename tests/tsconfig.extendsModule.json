@@ -1,0 +1,6 @@
+{
+  "extends": "@tsconfig/node21/tsconfig.json",
+  "compilerOptions": {
+    "strict": false
+  }
+}

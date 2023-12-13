@@ -1,4 +1,4 @@
-import { dtsPlugin, getTSConfig } from "../src";
+import { dtsPlugin, resolveTSConfig } from "../src";
 import { getCompilerOptions } from "../src/lib/getCompilerOptions";
 import { build } from "esbuild";
 import { existsSync, readFileSync } from "fs";
@@ -59,17 +59,34 @@ test("Incremental mode", async () => {
     expect(existsSync(resolve(distDir, "index.d.ts"))).toBe(false);
 });
 
-test("TSConfig extends is resolved", async () => {
-    const tsconfig = getTSConfig({
-        configPath: resolve(__dirname, "./tsconfig.extends.json"),
+describe("TSConfig extends is resolved", () => {
+    test("Relative path", async () => {
+        const tsconfig = resolveTSConfig({
+            configPath: resolve(__dirname, "./tsconfig.extends.json"),
+        });
+
+        const compilerOptions = getCompilerOptions({
+            tsconfig,
+            pluginOptions: {},
+            esbuildOptions: {},
+        });
+
+        expect(compilerOptions.strict).toBe(true);
+        expect(compilerOptions.emitDecoratorMetadata).toBe(true);
     });
 
-    const compilerOptions = getCompilerOptions({
-        tsconfig,
-        pluginOptions: {},
-        esbuildOptions: {},
-    });
+    test("Module paths", async () => {
+        const tsconfig = resolveTSConfig({
+            configPath: resolve(__dirname, "./tsconfig.extendsModule.json"),
+        });
 
-    expect(compilerOptions.strict).toBe(true);
-    expect(compilerOptions.emitDecoratorMetadata).toBe(true);
+        const compilerOptions = getCompilerOptions({
+            tsconfig,
+            pluginOptions: {},
+            esbuildOptions: {},
+        });
+
+        expect(compilerOptions.strict).toBe(false);
+        expect(compilerOptions.esModuleInterop).toBe(true);
+    });
 });
