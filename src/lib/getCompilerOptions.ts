@@ -36,9 +36,11 @@ export function getCompilerOptions(opts: {
             .digest("hex");
 
         const cacheDir = resolve(
-            require.resolve("esbuild"),
-            "../.cache/esbuild-plugin-d.ts",
+            require.resolve("esbuild/package.json"),
+            "../../.cache/esbuild-plugin-d.ts",
         );
+
+        console.log(cacheDir);
 
         compilerOptions.tsBuildInfoFile = resolve(
             opts.pluginOptions.buildInfoDir ?? cacheDir,
