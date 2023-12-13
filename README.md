@@ -1,10 +1,10 @@
-# `esbuild-plugin.d.ts`
+# `esbuild-plugin-d.ts`
 
 ESBuild plugin for compiling typescript declarations
 
 ## WARNING
 
-This plugin was made to make it easier to build declarations without running two commands simultaneously. It will add a lot of overhead to your build time and is not recommended for production use.
+This plugin was made to make it easier to build declarations without running two commands simultaneously. It will add a lot of overhead to your build time and should only really be used as a last resort.
 
 ### Alternatives
 
@@ -19,7 +19,7 @@ const { build } = require("esbuild");
 
 build({
     entryPoints: ["./test/index.ts"],
-    outdir: "./test/out.cjs",
+    outdir: "./dist",
     plugins: [dtsPlugin({
         // Optional options here
     })]
