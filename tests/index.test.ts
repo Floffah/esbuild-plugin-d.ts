@@ -89,3 +89,14 @@ describe("TSConfig extends is resolved", () => {
         expect(compilerOptions.esModuleInterop).toBe(true);
     });
 });
+
+test.failing("Fails on compiler error", async () => {
+    const tsconfig = resolve(__dirname, "./tsconfig.json");
+
+    await build({
+        plugins: [dtsPlugin({ tsconfig })],
+        entryPoints: ["./tests/inputs/index.errors.ts"],
+        outdir: distDir,
+        tsconfig,
+    });
+});

@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { Plugin } from "esbuild";
+import { PartialMessage, Plugin } from "esbuild";
 import { existsSync, lstatSync } from "fs";
 import { resolve } from "path";
 import ts from "typescript";
@@ -38,14 +38,22 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
             build.onLoad({ filter: /(\.tsx|\.ts)$/ }, async (args) => {
                 inputFiles.push(args.path);
 
+                const errors: PartialMessage[] = [];
+
                 compilerHost.getSourceFile(
                     args.path,
                     compilerOptions.target ?? ts.ScriptTarget.Latest,
-                    (m) => console.log(m),
+                    (m) => {
+                        errors.push({
+                            detail: m,
+                        });
+                    },
                     true,
                 );
 
-                return {};
+                return {
+                    errors,
+                };
             });
 
             build.onEnd(() => {
@@ -63,6 +71,41 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                         compilerOptions,
                         compilerHost,
                     );
+                }
+
+                const diagnostics = ts
+                    .getPreEmitDiagnostics(compilerProgram as ts.Program)
+                    .map(
+                        (d) =>
+                            ({
+                                text:
+                                    typeof d.messageText === "string"
+                                        ? d.messageText
+                                        : d.messageText.messageText,
+                                detail: d,
+                                location: {
+                                    file: d.file?.fileName,
+                                    namespace: "file",
+                                },
+                                category: d.category,
+                            }) satisfies PartialMessage & {
+                                category: ts.DiagnosticCategory;
+                            },
+                    );
+
+                const errors = diagnostics
+                    .filter((d) => d.category === ts.DiagnosticCategory.Error)
+                    .map(({ category: _, ...message }) => message);
+
+                const warnings = diagnostics
+                    .filter((d) => d.category === ts.DiagnosticCategory.Warning)
+                    .map(({ category: _, ...message }) => message);
+
+                if (errors.length > 0) {
+                    return {
+                        errors,
+                        warnings,
+                    };
                 }
 
                 const startTime = Date.now();
@@ -100,6 +143,10 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                         Date.now() - startTime
                     }ms}`,
                 );
+
+                return {
+                    warnings,
+                };
             });
         },
     }) as Plugin;
