@@ -24,6 +24,7 @@
     "baseUrl": ".",
     "declaration": true,
     "emitDeclarationOnly": true,
+    "types": ["bun-types"],
     "paths": {
       "@/*": ["./src/*"]
     }

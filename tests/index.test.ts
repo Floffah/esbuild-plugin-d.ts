@@ -1,4 +1,5 @@
 import { dtsPlugin, getCompilerOptions, resolveTSConfig } from "../src";
+import { beforeEach, describe, expect, test } from "bun:test";
 import { build } from "esbuild";
 import { existsSync, readFileSync } from "fs";
 import { rmSync } from "node:fs";
@@ -90,13 +91,15 @@ describe("TSConfig extends is resolved", () => {
     });
 });
 
-test.failing("Fails on compiler error", async () => {
+test("Fails on compiler error", async () => {
     const tsconfig = resolve(__dirname, "./tsconfig.json");
 
-    await build({
-        plugins: [dtsPlugin({ tsconfig })],
-        entryPoints: ["./tests/inputs/index.errors.ts"],
-        outdir: distDir,
-        tsconfig,
-    });
+    await expect(
+        build({
+            plugins: [dtsPlugin({ tsconfig })],
+            entryPoints: ["./tests/inputs/index.errors.ts"],
+            outdir: distDir,
+            tsconfig,
+        }),
+    ).rejects.toThrow();
 });
