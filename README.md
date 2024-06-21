@@ -29,8 +29,28 @@ build({
 
 The plugin uses the typescript compiler api. You don't need to enable declarations in your tsconfig.
 
-- Plugin does not enable incremental mode unless `incremental` is set to true in your tsconfig. When this is enabled, the plugin will automatically assume a tsbuildinfo file but will respect your config if set there.
-    - Be aware that if you delete your dist folder and have incremental mode enabled, your declarations may not be built.
+The plugin does not enable incremental mode unless `incremental` is set to true in your tsconfig. When this is enabled, the plugin will automatically assume a tsbuildinfo file but will respect your config if set there.
+
+Be aware that if you delete your dist folder and have incremental mode enabled, your declarations may not be built.
+
+### Bundling
+
+This plugin has experimental declaration bundling support, to enable it, set `experimentalBundling` to true in the plugin's options as follows:
+
+```js
+const { dtsPlugin } = require("esbuild-plugin-d.ts");
+const { build } = require("esbuild");
+
+build({
+    entryPoints: ["./test/index.ts"],
+    outdir: "./dist",
+    plugins: [dtsPlugin({
+        experimentalBundling: true
+    })]
+})
+```
+
+Note that this requires you to set your entry points in ESBuild.
 
 ### Options
 

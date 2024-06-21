@@ -4,7 +4,7 @@ import { resolve } from "path";
 
 describe("TSConfig extends is resolved", () => {
     test("Relative path", async () => {
-        const tsconfig = resolveTSConfig({
+        const { config: tsconfig } = resolveTSConfig({
             configPath: resolve(__dirname, "./tsconfig.json"),
         });
 
@@ -12,6 +12,7 @@ describe("TSConfig extends is resolved", () => {
             tsconfig,
             pluginOptions: {},
             esbuildOptions: {},
+            willBundleDeclarations: false,
         });
 
         expect(compilerOptions.strict).toBe(true);
@@ -19,7 +20,7 @@ describe("TSConfig extends is resolved", () => {
     });
 
     test("Module paths", async () => {
-        const tsconfig = resolveTSConfig({
+        const { config: tsconfig } = resolveTSConfig({
             configPath: resolve(__dirname, "./tsconfig.extendsModule.json"),
         });
 
@@ -27,6 +28,7 @@ describe("TSConfig extends is resolved", () => {
             tsconfig,
             pluginOptions: {},
             esbuildOptions: {},
+            willBundleDeclarations: false,
         });
 
         expect(compilerOptions.strict).toBe(false);

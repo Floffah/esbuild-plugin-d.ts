@@ -5,6 +5,7 @@ import { resolve } from "path";
 import ts from "typescript";
 
 import { humanizeFileSize } from "@/lib";
+import { generateBundle } from "@/lib/generateBundle";
 import { getCompilerOptions } from "@/lib/getCompilerOptions";
 import { createLogger } from "@/lib/logger";
 import { resolveTSConfig } from "@/lib/resolveTSConfig";
@@ -16,17 +17,26 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
         async setup(build) {
             const log = createLogger(build.initialOptions.logLevel);
 
-            const config =
+            const { config, configPath } =
                 opts.tsconfig && typeof opts.tsconfig !== "string"
-                    ? opts.tsconfig
+                    ? { config: opts.tsconfig, configPath: undefined }
                     : resolveTSConfig({
                           configPath: opts.tsconfig,
                       });
+
+            // TODO: uncomment once proven to work
+            // const willBundleDeclarations =
+            //     !!build.initialOptions.bundle &&
+            //     Array.isArray(build.initialOptions.entryPoints);
+            const willBundleDeclarations =
+                !!opts.experimentalBundling &&
+                Array.isArray(build.initialOptions.entryPoints);
 
             const compilerOptions = getCompilerOptions({
                 tsconfig: config,
                 pluginOptions: opts,
                 esbuildOptions: build.initialOptions,
+                willBundleDeclarations,
             });
 
             const compilerHost = compilerOptions.incremental
@@ -110,6 +120,23 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
 
                 const startTime = Date.now();
                 const emitResult = compilerProgram.emit();
+
+                if (willBundleDeclarations) {
+                    let entryPoints: string[] = [];
+
+                    if (Array.isArray(build.initialOptions.entryPoints)) {
+                        entryPoints = build.initialOptions.entryPoints.map(
+                            (entry: string | { in: string }) =>
+                                typeof entry === "string" ? entry : entry.in,
+                        );
+                    } else {
+                        entryPoints = Object.values(
+                            build.initialOptions.entryPoints!,
+                        );
+                    }
+
+                    generateBundle(entryPoints, compilerOptions, configPath);
+                }
 
                 if (
                     emitResult.emitSkipped ||

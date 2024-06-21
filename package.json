@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "chalk": "4.1.2",
+    "dts-bundle-generator": "^9.5.1",
     "lodash.merge": "^4.6.2"
   },
   "devDependencies": {

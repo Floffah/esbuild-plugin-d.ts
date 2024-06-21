@@ -16,6 +16,10 @@ export interface DTSPluginOpts {
      */
     buildInfoDir?: string;
     /**
+     * EXPERIMENTAL: Set to true to bundle the declarations into single files
+     */
+    experimentalBundling?: boolean;
+    /**
      * For testing purposes, allows adding a context to different builds with the same tsconfig.
      */
     __buildContext?: any;

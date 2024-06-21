@@ -41,7 +41,7 @@ export function resolveTSConfig(opts: {
             configPath:
                 resolveModulePath(config.config.extends) ??
                 resolve(dirname(configPath), config.config.extends),
-        });
+        }).config;
 
         config.config = merge(parentConfig, config.config);
     }
@@ -49,6 +49,9 @@ export function resolveTSConfig(opts: {
     if (config.error) {
         throw config.error;
     } else {
-        return config.config;
+        return {
+            config: config.config,
+            configPath,
+        };
     }
 }
