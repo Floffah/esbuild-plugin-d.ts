@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
@@ -9,8 +10,6 @@
     "moduleResolution": "node",
     "removeComments": true,
     "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -22,13 +21,8 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "types": ["bun-types"],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "isolatedModules": true
   },
   "exclude": ["node_modules"],
-  "include": ["./src/**/*.tsx", "./src/**/*.ts"]
+  "include": ["./test/**/*.tsx", "./test/**/*.ts"]
 }

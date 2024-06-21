@@ -1,5 +1,5 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
@@ -24,8 +24,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "strict": true,
-    "isolatedModules": true,
-    "incremental": true
+    "isolatedModules": true
   },
   "exclude": ["node_modules"],
   "include": ["./test/**/*.tsx", "./test/**/*.ts"]
