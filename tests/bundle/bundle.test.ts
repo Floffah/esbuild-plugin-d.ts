@@ -8,7 +8,7 @@ test("Basic config", async () => {
     const tsconfig = resolve(__dirname, "./tsconfig.json");
 
     await build({
-        plugins: [dtsPlugin({ tsconfig })],
+        plugins: [dtsPlugin({ tsconfig, experimentalBundling: true })],
         entryPoints: [
             resolve(__dirname, "./bundle.ts"),
             resolve(__dirname, "./secondBundle.ts"),
