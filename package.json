@@ -15,11 +15,11 @@
     "node": ">=12.0.0"
   },
   "scripts": {
-    "prepare": "yarn build --minify",
+    "prepare": "bun run build --minify",
     "build": "tsup",
     "test": "bun test",
-    "deps": "yarn ncu -u --reject chalk",
-    "publish:local": "export $(cat .env | xargs) && yarn semantic-release --dry-run"
+    "deps": "bunx ncu -x chalk -x eslint",
+    "publish:local": "export $(cat .env | xargs) && bunx semantic-release --dry-run"
   },
   "publishConfig": {
     "access": "public",
@@ -34,20 +34,20 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
-    "@tsconfig/node21": "^21.0.0",
+    "@tsconfig/node21": "^21.0.3",
     "@types/lodash.merge": "^4",
     "@types/tmp": "^0.2.6",
-    "@typescript-eslint/eslint-plugin": "^6.14.0",
-    "@typescript-eslint/parser": "^6.14.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
     "bun-types": "^1.1.15",
-    "esbuild": "^0.19.9",
-    "eslint": "^8.55.0",
+    "esbuild": "^0.21.5",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "npm-check-updates": "^16.14.11",
-    "prettier": "^3.1.1",
-    "semantic-release": "^22.0.12",
-    "tsup": "^8.0.1",
-    "typescript": "^5.3.3"
+    "npm-check-updates": "^16.14.20",
+    "prettier": "^3.3.2",
+    "semantic-release": "^24.0.0",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.2"
   },
-  "packageManager": "yarn@4.0.2"
+  "packageManager": "bun@1.1.15"
 }
