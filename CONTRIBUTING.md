@@ -1,5 +1,5 @@
 # Contributing
 
-This project does not have commit conventions, make sure your commits/prs are descriptive of what they are for and that is enough!
+This project follows the [Angular](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines) & [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) commit message guidelines. All commits that fix a bug or add a feature **must** be marked with the feat/fix scope otherwise they may not trigger a release once merged.
 
-I use prettier and eslint in this project however if you don't know how to use these but want to submit a pull request, I can reformat and fix eslint issues for you!
+Prettier and ESLint are also present here, please make sure your code is formatted correctly and up to the standards of this project before submitting a PR.
