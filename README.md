@@ -16,6 +16,9 @@ This plugin was made to make it easier to build declarations without running two
 ```js
 const { dtsPlugin } = require("esbuild-plugin-d.ts");
 const { build } = require("esbuild");
+// OR
+import { dtsPlugin } from "esbuild-plugin-d.ts";
+import { build } from "esbuild";
 
 build({
     entryPoints: ["./test/index.ts"],
@@ -38,9 +41,6 @@ Be aware that if you delete your dist folder and have incremental mode enabled, 
 This plugin has experimental declaration bundling support, to enable it, set `experimentalBundling` to true in the plugin's options as follows:
 
 ```js
-const { dtsPlugin } = require("esbuild-plugin-d.ts");
-const { build } = require("esbuild");
-
 build({
     entryPoints: ["./test/index.ts"],
     outdir: "./dist",
