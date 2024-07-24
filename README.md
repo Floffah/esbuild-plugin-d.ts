@@ -40,6 +40,9 @@ Be aware that if you delete your dist folder and have incremental mode enabled, 
 
 This plugin has experimental declaration bundling support, to enable it, set `experimentalBundling` to true in the plugin's options as follows:
 
+
+Note that this also requires you to set your entry points in ESBuild.
+
 ```js
 build({
     entryPoints: ["./test/index.ts"],
@@ -50,7 +53,7 @@ build({
 })
 ```
 
-Note that this requires you to set your entry points in ESBuild.
+Once proven to be stable, this will be enabled when `bundle` is set to true in ESBuild and will be documented properly.
 
 ### Options
 
