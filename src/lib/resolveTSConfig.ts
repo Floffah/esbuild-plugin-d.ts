@@ -1,6 +1,6 @@
-import { readFileSync } from "fs";
 import merge from "lodash.merge";
-import { dirname, resolve } from "path";
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import ts from "typescript";
 
 function resolveModulePath(path: string) {

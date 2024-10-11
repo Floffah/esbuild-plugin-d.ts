@@ -1,8 +1,8 @@
 import { generateDtsBundle } from "dts-bundle-generator";
-import { rmSync, writeFileSync } from "fs";
-import { dirname, sep as pathSeparator, resolve } from "path";
+import { randomBytes } from "node:crypto";
+import { rmSync, writeFileSync } from "node:fs";
+import { dirname, sep as pathSeparator, resolve } from "node:path";
 import ts from "typescript";
-import { randomBytes } from "crypto";
 
 function getHighestCommonDirectory(paths: string[]): string {
     if (paths.length === 0) {
@@ -40,25 +40,20 @@ export function generateBundle(
 
     let shouldDeleteTsConfig = false;
     if (!tsconfigPath) {
-        const tempid = randomBytes(20).toString('hex');
+        const tempid = randomBytes(20).toString("hex");
 
-        tsconfigPath = resolve(
-            process.cwd(),
-            `tsconfig.${tempid}.json`,
-        )
+        tsconfigPath = resolve(process.cwd(), `tsconfig.${tempid}.json`);
 
         writeFileSync(
             tsconfigPath,
-            JSON.stringify(
-                {
-                    ...originalConfig,
-                    compilerOptions,
-                    include: entryPoints,
-                }
-            ),
-        )
+            JSON.stringify({
+                ...originalConfig,
+                compilerOptions,
+                include: entryPoints,
+            }),
+        );
 
-        shouldDeleteTsConfig = true
+        shouldDeleteTsConfig = true;
     }
 
     const bundles = generateDtsBundle(
@@ -84,6 +79,6 @@ export function generateBundle(
     }
 
     if (shouldDeleteTsConfig) {
-        rmSync(tsconfigPath)
+        rmSync(tsconfigPath);
     }
 }

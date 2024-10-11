@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { PartialMessage, Plugin } from "esbuild";
-import { existsSync, lstatSync } from "fs";
-import { resolve } from "path";
+import { existsSync, lstatSync } from "node:fs";
+import { resolve } from "node:path";
 import ts from "typescript";
 
 import { humanizeFileSize } from "@/lib";
@@ -135,7 +135,12 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                         );
                     }
 
-                    generateBundle(entryPoints, compilerOptions, configPath, config);
+                    generateBundle(
+                        entryPoints,
+                        compilerOptions,
+                        configPath,
+                        config,
+                    );
                 }
 
                 if (

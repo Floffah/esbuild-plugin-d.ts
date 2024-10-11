@@ -1,6 +1,6 @@
-import { createHash } from "crypto";
 import { BuildOptions } from "esbuild";
-import { resolve } from "path";
+import { createHash } from "node:crypto";
+import { resolve } from "node:path";
 import ts from "typescript";
 
 import { DTSPluginOpts } from "@/types";

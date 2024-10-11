@@ -1,4 +1,4 @@
-import { TsconfigRaw } from "esbuild";
+import {TsconfigRaw} from "esbuild";
 
 export interface DTSPluginOpts {
     /**
