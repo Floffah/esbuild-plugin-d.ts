@@ -135,7 +135,7 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                         );
                     }
 
-                    generateBundle(entryPoints, compilerOptions, configPath);
+                    generateBundle(entryPoints, compilerOptions, configPath, config);
                 }
 
                 if (
