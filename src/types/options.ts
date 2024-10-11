@@ -1,4 +1,4 @@
-import {TsconfigRaw} from "esbuild";
+import {TsConfigJson} from "type-fest";
 
 export interface DTSPluginOpts {
     /**
@@ -9,7 +9,7 @@ export interface DTSPluginOpts {
     /**
      * path to the tsconfig to use. (some monorepos might need to use this)
      */
-    tsconfig?: string | TsconfigRaw;
+    tsconfig?: string | TsConfigJson;
     /**
      * Directory to store build info files in (only if using incremental builds and no tsBuildInfoFile is defined in tsconfig)
      * @default os tmp directory

@@ -4,7 +4,7 @@ export const tsup: Options = {
     target: "node12",
     entry: ["./src/index.ts"],
     format: ["cjs", "esm"],
-    external: ["esbuild", "typescript", "chalk", "tmp"],
+    external: ["esbuild", "typescript", "chalk", "tmp", "type-fest"],
     dts: true,
     clean: true,
     sourcemap: true,
