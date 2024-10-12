@@ -44,7 +44,6 @@ export function generateBundle(
 
         tsconfigPath = resolve(process.cwd(), `tsconfig.${tempid}.json`);
 
-        console.log(originalConfig)
         writeFileSync(
             tsconfigPath,
             JSON.stringify({
