@@ -29,7 +29,7 @@ export function generateBundle(
     entryPoints: string[],
     compilerOptions: ts.CompilerOptions,
     tsconfigPath?: string,
-    originalConfig: any = {},
+    originalConfig?: any,
 ) {
     const commonOutDir = getHighestCommonDirectory(entryPoints);
 
@@ -39,16 +39,22 @@ export function generateBundle(
     const postbundleOutDir = resolve(compilerOptions.declarationDir!, "..");
 
     let shouldDeleteTsConfig = false;
-    if (!tsconfigPath) {
-        const tempid = randomBytes(20).toString("hex");
+    if (!tsconfigPath && originalConfig) {
+        const tempid = randomBytes(6).toString("hex");
 
         tsconfigPath = resolve(process.cwd(), `tsconfig.${tempid}.json`);
 
+        console.log(originalConfig)
         writeFileSync(
             tsconfigPath,
             JSON.stringify({
                 ...originalConfig,
-                compilerOptions,
+                compilerOptions: {
+                    ...originalConfig.compilerOptions,
+                    declaration: true,
+                    emitDeclarationOnly: true,
+                    declarationDir: postbundleOutDir,
+                },
                 include: entryPoints,
             }),
         );
@@ -56,29 +62,37 @@ export function generateBundle(
         shouldDeleteTsConfig = true;
     }
 
-    const bundles = generateDtsBundle(
-        relativeDeclarationPaths.map((path) => ({
-            filePath: resolve(compilerOptions.declarationDir!, path),
-        })),
-        {
-            preferredConfigPath: tsconfigPath,
-        },
-    );
+    try {
+        const bundles = generateDtsBundle(
+            relativeDeclarationPaths.map((path) => ({
+                filePath: resolve(compilerOptions.declarationDir!, path),
+            })),
+            {
+                preferredConfigPath: tsconfigPath,
+            },
+        );
 
-    for (let i = 0; i < bundles.length; i++) {
-        const bundle = bundles[i];
-        const originalPath = relativeDeclarationPaths[i];
+        for (let i = 0; i < bundles.length; i++) {
+            const bundle = bundles[i];
+            const originalPath = relativeDeclarationPaths[i];
 
-        const outputPath = resolve(postbundleOutDir, originalPath);
+            const outputPath = resolve(postbundleOutDir, originalPath);
 
-        writeFileSync(outputPath, bundle);
-    }
+            writeFileSync(outputPath, bundle);
+        }
 
-    if (compilerOptions.declarationDir!.endsWith("dts-prebundle")) {
-        rmSync(compilerOptions.declarationDir!, { recursive: true });
-    }
+        if (compilerOptions.declarationDir!.endsWith("dts-prebundle")) {
+            rmSync(compilerOptions.declarationDir!, { recursive: true });
+        }
 
-    if (shouldDeleteTsConfig) {
-        rmSync(tsconfigPath);
+        if (shouldDeleteTsConfig && tsconfigPath) {
+            rmSync(tsconfigPath);
+        }
+    } catch (e) {
+        if (shouldDeleteTsConfig && tsconfigPath) {
+            rmSync(tsconfigPath);
+        }
+
+        throw e;
     }
 }
