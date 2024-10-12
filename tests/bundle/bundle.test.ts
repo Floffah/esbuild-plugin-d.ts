@@ -3,7 +3,7 @@ import { distDir, readOutputFile } from "../_utils";
 import { expect, test } from "bun:test";
 import { build } from "esbuild";
 import { resolve } from "path";
-import {TsConfigJson} from "type-fest";
+import { TsConfigJson } from "type-fest";
 
 test("Basic config", async () => {
     const tsconfig = resolve(__dirname, "./tsconfig.json");
@@ -28,11 +28,11 @@ test.only("Pass tsconfig as object", async () => {
         compilerOptions: {
             emitDeclarationOnly: true,
             allowImportingTsExtensions: true,
-            "target": "es6",
-            "module": "commonjs",
-            "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
-        }
-    }
+            target: "es6",
+            module: "commonjs",
+            lib: ["dom", "es6", "es2017", "esnext.asynciterable"],
+        },
+    };
 
     await build({
         plugins: [dtsPlugin({ tsconfig, experimentalBundling: true })],
