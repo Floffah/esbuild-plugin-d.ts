@@ -6,6 +6,7 @@ priv
 node_modules
 dist
 types
+!src/types
 assets
 data
 .storybook

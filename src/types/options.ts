@@ -1,4 +1,4 @@
-import {TsConfigJson} from "type-fest";
+import { TsConfigJson } from "type-fest";
 
 export interface DTSPluginOpts {
     /**
