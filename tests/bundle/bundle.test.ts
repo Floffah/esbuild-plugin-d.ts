@@ -23,7 +23,7 @@ test("Basic config", async () => {
     expect(readOutputFile("secondBundle")).toMatchSnapshot();
 });
 
-test.only("Pass tsconfig as object", async () => {
+test("Pass tsconfig as object", async () => {
     const tsconfig: TsConfigJson = {
         compilerOptions: {
             emitDeclarationOnly: true,
