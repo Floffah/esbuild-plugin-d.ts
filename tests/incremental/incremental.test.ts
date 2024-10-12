@@ -11,7 +11,7 @@ test("Incremental mode", async () => {
 
     await build({
         plugins: [dtsPlugin({ tsconfig, __buildContext })],
-        entryPoints: [resolve(__dirname, "./incremental.ts")],
+        entryPoints: [resolve(__dirname, "./inputs/incremental.ts")],
         outdir: distDir,
         tsconfig,
     });
@@ -22,7 +22,7 @@ test("Incremental mode", async () => {
 
     await build({
         plugins: [dtsPlugin({ tsconfig, __buildContext })],
-        entryPoints: [resolve(__dirname, "./incremental.ts")],
+        entryPoints: [resolve(__dirname, "./inputs/incremental.ts")],
         outdir: distDir,
         tsconfig,
     });

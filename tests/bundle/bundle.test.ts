@@ -10,8 +10,8 @@ test("Basic config", async () => {
     await build({
         plugins: [dtsPlugin({ tsconfig, experimentalBundling: true })],
         entryPoints: [
-            resolve(__dirname, "./bundle.ts"),
-            resolve(__dirname, "./secondBundle.ts"),
+            resolve(__dirname, "./inputs/bundle.ts"),
+            resolve(__dirname, "./inputs/secondBundle.ts"),
         ],
         outdir: distDir,
         tsconfig,

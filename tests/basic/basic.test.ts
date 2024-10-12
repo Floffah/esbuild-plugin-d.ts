@@ -9,7 +9,7 @@ test("Basic config", async () => {
 
     await build({
         plugins: [dtsPlugin({ tsconfig })],
-        entryPoints: [resolve(__dirname, "./basic.ts")],
+        entryPoints: [resolve(__dirname, "./inputs/basic.ts")],
         outdir: distDir,
         tsconfig,
     });

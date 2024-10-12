@@ -10,7 +10,7 @@ test("Fails on compiler error", async () => {
     await expect(
         build({
             plugins: [dtsPlugin({ tsconfig })],
-            entryPoints: [resolve(__dirname, "./compilerErrors.ts")],
+            entryPoints: [resolve(__dirname, "./inputs/compilerErrors.ts")],
             outdir: distDir,
             tsconfig,
         }),
