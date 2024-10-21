@@ -83,15 +83,9 @@ export function generateBundle(
         if (compilerOptions.declarationDir!.endsWith("dts-prebundle")) {
             rmSync(compilerOptions.declarationDir!, { recursive: true });
         }
-
+    } finally {
         if (shouldDeleteTsConfig && tsconfigPath) {
             rmSync(tsconfigPath);
         }
-    } catch (e) {
-        if (shouldDeleteTsConfig && tsconfigPath) {
-            rmSync(tsconfigPath);
-        }
-
-        throw e;
     }
 }
