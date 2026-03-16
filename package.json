@@ -1,59 +1,61 @@
 {
-  "name": "esbuild-plugin-d.ts",
-  "version": "1.3.0",
-  "main": "./dist/index.js",
-  "exports": {
-    "require": "./dist/index.js",
-    "import": "./dist/index.mjs"
-  },
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist",
-    "LICENSE"
-  ],
-  "repository": "https://github.com/Floffah/esbuild-plugin-d.ts.git",
-  "author": "Floffah <therealfloffah@gmail.com>",
-  "license": "MIT",
-  "engines": {
-    "node": ">=12.0.0"
-  },
-  "scripts": {
-    "prepare": "bun run build --minify",
-    "build": "tsup",
-    "test": "bun test",
-    "deps": "bunx ncu -x chalk -x eslint",
-    "lint": "bunx eslint . --ext .ts",
-    "publish:local": "export $(cat .env | xargs) && bunx semantic-release --dry-run"
-  },
-  "publishConfig": {
-    "access": "public",
-    "provenance": true
-  },
-  "peerDependencies": {
-    "typescript": "*"
-  },
-  "dependencies": {
-    "chalk": "4.1.2",
-    "dts-bundle-generator": "^9.5.1",
-    "lodash.merge": "^4.6.2",
-    "type-fest": "^4.26.1"
-  },
-  "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
-    "@tsconfig/node21": "^21.0.3",
-    "@types/lodash.merge": "^4",
-    "@types/tmp": "^0.2.6",
-    "@typescript-eslint/eslint-plugin": "^7.13.1",
-    "@typescript-eslint/parser": "^7.13.1",
-    "bun-types": "^1.1.15",
-    "esbuild": "^0.21.5",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "npm-check-updates": "^16.14.20",
-    "prettier": "^3.3.2",
-    "semantic-release": "^24.0.0",
-    "tsup": "^8.1.0",
-    "typescript": "^5.5.2"
-  },
-  "packageManager": "bun@1.1.15"
+    "name": "esbuild-plugin-d.ts",
+    "version": "1.3.0",
+    "main": "./dist/index.js",
+    "exports": {
+        "require": "./dist/index.js",
+        "import": "./dist/index.mjs"
+    },
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist",
+        "LICENSE"
+    ],
+    "repository": "https://github.com/Floffah/esbuild-plugin-d.ts.git",
+    "author": "Floffah <therealfloffah@gmail.com>",
+    "license": "MIT",
+    "engines": {
+        "node": ">=12.0.0"
+    },
+    "scripts": {
+        "prepare": "bun run build --minify",
+        "build": "tsup",
+        "test": "bun test",
+        "deps": "bunx ncu -x chalk -x eslint",
+        "lint": "bunx eslint . --ext .ts",
+        "release": "changeset publish"
+    },
+    "publishConfig": {
+        "access": "public",
+        "provenance": true
+    },
+    "peerDependencies": {
+        "typescript": "*"
+    },
+    "dependencies": {
+        "chalk": "4.1.2",
+        "dts-bundle-generator": "^9.5.1",
+        "lodash.merge": "^4.6.2",
+        "type-fest": "^4.26.1"
+    },
+    "devDependencies": {
+        "@changesets/changelog-github": "^0.6.0",
+        "@changesets/cli": "^2.30.0",
+        "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+        "@tsconfig/node21": "^21.0.3",
+        "@types/lodash.merge": "^4",
+        "@types/tmp": "^0.2.6",
+        "@typescript-eslint/eslint-plugin": "^7.13.1",
+        "@typescript-eslint/parser": "^7.13.1",
+        "bun-types": "^1.1.15",
+        "esbuild": "^0.21.5",
+        "eslint": "^8.57.0",
+        "eslint-config-prettier": "^9.1.0",
+        "npm-check-updates": "^16.14.20",
+        "prettier": "^3.3.2",
+        "semantic-release": "^24.0.0",
+        "tsup": "^8.1.0",
+        "typescript": "^5.5.2"
+    },
+    "packageManager": "bun@1.1.15"
 }
