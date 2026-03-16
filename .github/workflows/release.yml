@@ -1,38 +1,38 @@
 name: Release
+
 on:
   push:
     branches:
       - main
-      - canary
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
-  contents: read # for checkout
+  contents: read
+  id-token: write
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
     permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "latest"
-      - uses: oven-sh/setup-bun@v1
-      - name: Install dependencies
+          node-version: "lts/*"
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install Dependencies
         run: bun install --frozen-lockfile
-      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
-        run: npm audit signatures
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
+        id: changesets
+        with:
+          publish: bun release
