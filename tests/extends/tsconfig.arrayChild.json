@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.arrayBase.json",
+  "compilerOptions": {
+    "lib": ["es2020"]
+  }
+}
