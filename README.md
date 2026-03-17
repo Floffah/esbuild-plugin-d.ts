@@ -2,10 +2,6 @@
 
 ESBuild plugin for compiling typescript declarations
 
-## Runtime Support
-
-This package supports Node.js 20 and newer.
-
 ## WARNING
 
 This plugin was made to make it easier to build declarations without running two commands simultaneously. It will add a lot of overhead to your build time and should only really be used as a last resort.
@@ -14,6 +10,11 @@ This plugin was made to make it easier to build declarations without running two
 
 - [TSUP](https://npm.im/tsup) - Similar usage to this plugin, but more stable and configurable. A CLI tool wrapped around ESBuild rather than a plugin
 - [Estrella](https://npm.im/estrella)
+
+## Version 2 Breaking Changes
+
+- Minimum node version is now v20.
+- Removed default export, must use dtsPlugin named export.
 
 ## Usage
 
