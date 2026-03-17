@@ -6,6 +6,9 @@ export default defineConfig({
     format: ["esm", "cjs"],
     platform: "node",
     sourcemap: true,
+    deps: {
+        neverBundle: ["typescript", "esbuild"],
+    },
     outExtensions: (context) => {
         if (context.format === "cjs") {
             return {
