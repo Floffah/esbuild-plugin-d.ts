@@ -32,7 +32,7 @@
         "build": "tsdown",
         "test": "bun test",
         "deps": "bunx ncu -x chalk -x eslint",
-        "lint": "bunx eslint . --ext .ts && attw --pack . && publint --package .",
+        "lint": "bunx eslint . --ext .ts && attw --pack . && publint --package . --pack npm",
         "release": "changeset publish"
     },
     "publishConfig": {
