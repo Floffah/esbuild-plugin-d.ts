@@ -15,6 +15,8 @@ This plugin was made to make it easier to build declarations without running two
 
 - Minimum node version is now v20.
 - Removed default export, must use dtsPlugin named export.
+- Removed helper exports, only plugin and types remain.
+  - If people rely on this, I'm happy to add some of it back in a future version
 
 ## Usage
 
