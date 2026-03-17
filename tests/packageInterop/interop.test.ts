@@ -9,4 +9,6 @@ test("Package entrypoints work from both CJS and ESM builds", async () => {
 
     expect(typeof esmModule.dtsPlugin).toBe("function");
     expect(typeof cjsModule.dtsPlugin).toBe("function");
+    expect("default" in esmModule).toBe(false);
+    expect("default" in cjsModule).toBe(false);
 });
