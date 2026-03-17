@@ -1,4 +1,4 @@
-import { LogLevel } from "esbuild";
+import type { LogLevel } from "esbuild";
 
 export function createLogger(logLevel?: LogLevel) {
     const levels: LogLevel[] = [

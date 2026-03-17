@@ -1,9 +1,9 @@
-import { BuildOptions } from "esbuild";
+import type { BuildOptions } from "esbuild";
 import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 import ts from "typescript";
 
-import { DTSPluginOpts } from "@/types";
+import type { DTSPluginOpts } from "@/types";
 
 export function getCompilerOptions(opts: {
     tsconfig: any;

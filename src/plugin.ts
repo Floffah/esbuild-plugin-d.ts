@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { PartialMessage, Plugin } from "esbuild";
+import type { PartialMessage, Plugin } from "esbuild";
 import { existsSync, lstatSync } from "node:fs";
 import { resolve } from "node:path";
 import ts from "typescript";
@@ -9,7 +9,7 @@ import { generateBundle } from "@/lib/generateBundle";
 import { getCompilerOptions } from "@/lib/getCompilerOptions";
 import { createLogger } from "@/lib/logger";
 import { resolveTSConfig } from "@/lib/resolveTSConfig";
-import { DTSPluginOpts } from "@/types/options";
+import type { DTSPluginOpts } from "@/types/options";
 
 export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
     ({

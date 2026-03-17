@@ -2,6 +2,10 @@
 
 ESBuild plugin for compiling typescript declarations
 
+## Runtime Support
+
+This package supports Node.js 20 and newer.
+
 ## WARNING
 
 This plugin was made to make it easier to build declarations without running two commands simultaneously. It will add a lot of overhead to your build time and should only really be used as a last resort.
