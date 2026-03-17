@@ -1,7 +1,7 @@
 import { generateDtsBundle } from "dts-bundle-generator";
 import { randomBytes } from "node:crypto";
 import { rmSync, writeFileSync } from "node:fs";
-import { sep as pathSeparator, resolve } from "node:path";
+import { dirname, sep as pathSeparator, resolve } from "node:path";
 import ts from "typescript";
 
 function getHighestCommonDirectory(paths: string[]): string {
@@ -16,7 +16,7 @@ function getHighestCommonDirectory(paths: string[]): string {
     }
 
     if (otherPaths.length === 0) {
-        return firstPath.replace(/[\\/][^\\/]+$/, "");
+        return dirname(firstPath);
     }
 
     const [firstParts, ...otherPathParts] = paths.map((p) =>
