@@ -7,8 +7,7 @@ export function humanizeFileSize(size: number): string {
     const i = Math.floor(Math.log(size) / Math.log(1024));
     const clampedIndex = Math.min(Math.max(i, 0), units.length - 1);
 
-    const value =
-        Math.round((size / Math.pow(1024, clampedIndex)) * 100) / 100;
+    const value = Math.round((size / Math.pow(1024, clampedIndex)) * 100) / 100;
 
-    return value + units[clampedIndex];
+    return value + units[clampedIndex]!;
 }
