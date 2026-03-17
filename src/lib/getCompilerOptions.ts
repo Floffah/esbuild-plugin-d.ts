@@ -4,17 +4,42 @@ import { resolve } from "node:path";
 import ts from "typescript";
 
 import type { DTSPluginOpts } from "@/types";
+import type { ResolvedTSConfig } from "@/lib/resolveTSConfig";
+
+function isParsedCompilerOptions(
+    compilerOptions: unknown,
+): compilerOptions is ts.CompilerOptions {
+    if (!compilerOptions || typeof compilerOptions !== "object") {
+        return false;
+    }
+
+    const options = compilerOptions as ts.CompilerOptions;
+
+    return (
+        typeof options.target === "number" ||
+        typeof options.module === "number" ||
+        typeof options.moduleResolution === "number" ||
+        typeof options.configFilePath === "string"
+    );
+}
 
 export function getCompilerOptions(opts: {
-    tsconfig: any;
+    tsconfig:
+        | ResolvedTSConfig
+        | {
+              compilerOptions?: Record<string, unknown>;
+          };
     pluginOptions: DTSPluginOpts;
     esbuildOptions: BuildOptions;
     willBundleDeclarations: boolean;
 }) {
-    const compilerOptions = ts.convertCompilerOptionsFromJson(
-        opts.tsconfig.compilerOptions,
-        process.cwd(),
-    ).options;
+    const sourceCompilerOptions = opts.tsconfig.compilerOptions ?? {};
+    const compilerOptions = isParsedCompilerOptions(sourceCompilerOptions)
+        ? { ...sourceCompilerOptions }
+        : ts.convertCompilerOptionsFromJson(
+              sourceCompilerOptions,
+              process.cwd(),
+          ).options;
 
     compilerOptions.declaration = true;
     compilerOptions.emitDeclarationOnly = true;
