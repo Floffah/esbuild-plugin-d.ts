@@ -7,14 +7,29 @@ import ts from "typescript";
 function getHighestCommonDirectory(paths: string[]): string {
     if (paths.length === 0) {
         return "";
-    } else if (paths.length === 1) {
-        return dirname(paths[0]);
     }
 
-    const [firstPath, ...otherPaths] = paths.map((p) => p.split(pathSeparator));
-    let commonParts = firstPath;
+    const [firstPath, ...otherPaths] = paths;
 
-    for (const currentPath of otherPaths) {
+    if (!firstPath) {
+        return "";
+    }
+
+    if (otherPaths.length === 0) {
+        return dirname(firstPath);
+    }
+
+    const [firstParts, ...otherPathParts] = paths.map((p) =>
+        p.split(pathSeparator),
+    );
+
+    if (!firstParts) {
+        return "";
+    }
+
+    let commonParts = firstParts;
+
+    for (const currentPath of otherPathParts) {
         commonParts = commonParts.slice(
             0,
             commonParts.findIndex((part, i) => part !== currentPath[i]) ||
@@ -74,6 +89,10 @@ export function generateBundle(
         for (let i = 0; i < bundles.length; i++) {
             const bundle = bundles[i];
             const originalPath = relativeDeclarationPaths[i];
+
+            if (!bundle || !originalPath) {
+                continue;
+            }
 
             const outputPath = resolve(postbundleOutDir, originalPath);
 

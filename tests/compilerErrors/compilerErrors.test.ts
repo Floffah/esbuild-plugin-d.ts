@@ -1,4 +1,4 @@
-import { dtsPlugin } from "../../dist";
+import { dtsPlugin } from "esbuild-plugin-d.ts";
 import { distDir } from "../_utils";
 import { expect, test } from "bun:test";
 import { build } from "esbuild";

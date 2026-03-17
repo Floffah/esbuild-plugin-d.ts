@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
@@ -21,6 +21,7 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
+    "types": [],
     "isolatedModules": true
   },
   "exclude": ["node_modules"],

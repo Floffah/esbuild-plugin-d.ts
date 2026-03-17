@@ -1,9 +1,9 @@
-import { dtsPlugin } from "../../dist";
 import { distDir, readOutputFile } from "../_utils";
 import { expect, test } from "bun:test";
 import { build } from "esbuild";
+import { dtsPlugin } from "esbuild-plugin-d.ts";
 import { resolve } from "path";
-import { TsConfigJson } from "type-fest";
+import type { TsConfigJson } from "type-fest";
 
 test("Basic config", async () => {
     const tsconfig = resolve(__dirname, "./tsconfig.json");
@@ -31,6 +31,7 @@ test("Pass tsconfig as object", async () => {
             target: "es6",
             module: "commonjs",
             lib: ["dom", "es6", "es2017", "esnext.asynciterable"],
+            types: [],
         },
     };
 

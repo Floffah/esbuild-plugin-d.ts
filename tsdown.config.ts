@@ -5,6 +5,7 @@ export default defineConfig({
     dts: true,
     format: ["esm", "cjs"],
     platform: "node",
+    target: "node20",
     sourcemap: true,
     deps: {
         neverBundle: ["typescript", "esbuild"],

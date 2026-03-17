@@ -5,11 +5,17 @@ on: [push, pull_request]
 jobs:
   check:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: bun run build
       - run: bun run lint
-      - run: bunx tsc --noEmit --emitDeclarationOnly false
+      - run: bunx tsc --noEmit
       - run: bun run test

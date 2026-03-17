@@ -1,4 +1,4 @@
-import { getCompilerOptions, resolveTSConfig } from "../../dist";
+import { getCompilerOptions, resolveTSConfig } from "esbuild-plugin-d.ts";
 import { describe, expect, test } from "bun:test";
 import { resolve } from "path";
 
