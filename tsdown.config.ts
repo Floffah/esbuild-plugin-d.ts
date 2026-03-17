@@ -7,6 +7,7 @@ export default defineConfig({
     platform: "node",
     target: "node20",
     sourcemap: true,
+    minify: process.env.CI === "true",
     deps: {
         neverBundle: ["typescript", "esbuild"],
     },

@@ -29,7 +29,6 @@
         "node": ">=20.0.0"
     },
     "scripts": {
-        "prepare": "bun run build --minify",
         "build": "tsdown",
         "test": "bun test",
         "deps": "bunx ncu -x chalk -x eslint",

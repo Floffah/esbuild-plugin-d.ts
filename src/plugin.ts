@@ -7,7 +7,7 @@ import ts from "typescript";
 import { humanizeFileSize } from "@/lib";
 import { generateBundle } from "@/lib/generateBundle";
 import { getCompilerOptions } from "@/lib/getCompilerOptions";
-import { clearStaleBuildInfo } from "@/lib/incremental";
+import { clearStaleBuildInfo, getEmitCommandLine } from "@/lib/incremental";
 import { createLogger } from "@/lib/logger";
 import { resolveTSConfig } from "@/lib/resolveTSConfig";
 import type { DTSPluginOpts } from "@/types/options";
@@ -33,7 +33,7 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 !!opts.experimentalBundling &&
                 Array.isArray(build.initialOptions.entryPoints);
 
-            const compilerOptions = getCompilerOptions({
+            const { bundleOutDir, compilerOptions } = getCompilerOptions({
                 tsconfig: config,
                 pluginOptions: opts,
                 esbuildOptions: build.initialOptions,
@@ -75,10 +75,17 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 let compilerProgram;
 
                 if (compilerOptions.incremental) {
+                    const emitCommandLine = getEmitCommandLine({
+                        tsconfig: config,
+                        compilerOptions,
+                        inputFiles,
+                        parsedCommandLine,
+                    });
+
                     clearStaleBuildInfo(
                         inputFiles,
                         compilerOptions,
-                        parsedCommandLine,
+                        emitCommandLine,
                     );
 
                     compilerProgram = ts.createIncrementalProgram({
@@ -149,6 +156,7 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                     generateBundle(
                         entryPoints,
                         compilerOptions,
+                        bundleOutDir!,
                         configPath,
                         config,
                     );

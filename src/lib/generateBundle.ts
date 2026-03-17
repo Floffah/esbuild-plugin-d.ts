@@ -1,7 +1,7 @@
 import { generateDtsBundle } from "dts-bundle-generator";
 import { randomBytes } from "node:crypto";
 import { rmSync, writeFileSync } from "node:fs";
-import { dirname, sep as pathSeparator, resolve } from "node:path";
+import { sep as pathSeparator, resolve } from "node:path";
 import ts from "typescript";
 
 function getHighestCommonDirectory(paths: string[]): string {
@@ -16,7 +16,7 @@ function getHighestCommonDirectory(paths: string[]): string {
     }
 
     if (otherPaths.length === 0) {
-        return dirname(firstPath);
+        return firstPath.replace(/[\\/][^\\/]+$/, "");
     }
 
     const [firstParts, ...otherPathParts] = paths.map((p) =>
@@ -43,6 +43,7 @@ function getHighestCommonDirectory(paths: string[]): string {
 export function generateBundle(
     entryPoints: string[],
     compilerOptions: ts.CompilerOptions,
+    bundleOutDir: string,
     tsconfigPath?: string,
     originalConfig?: any,
 ) {
@@ -51,8 +52,6 @@ export function generateBundle(
     const relativeDeclarationPaths = entryPoints.map((entry) =>
         entry.replace(commonOutDir + "/", "").replace(/\.tsx?$/, ".d.ts"),
     );
-    const postbundleOutDir = resolve(compilerOptions.declarationDir!, "..");
-
     let shouldDeleteTsConfig = false;
     if (!tsconfigPath && originalConfig) {
         const tempid = randomBytes(6).toString("hex");
@@ -67,7 +66,7 @@ export function generateBundle(
                     ...originalConfig.compilerOptions,
                     declaration: true,
                     emitDeclarationOnly: true,
-                    declarationDir: postbundleOutDir,
+                    declarationDir: bundleOutDir,
                 },
                 include: entryPoints,
             }),
@@ -94,13 +93,9 @@ export function generateBundle(
                 continue;
             }
 
-            const outputPath = resolve(postbundleOutDir, originalPath);
+            const outputPath = resolve(bundleOutDir, originalPath);
 
             writeFileSync(outputPath, bundle);
-        }
-
-        if (compilerOptions.declarationDir!.endsWith("dts-prebundle")) {
-            rmSync(compilerOptions.declarationDir!, { recursive: true });
         }
     } finally {
         if (shouldDeleteTsConfig && tsconfigPath) {

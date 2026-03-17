@@ -24,6 +24,11 @@ function isParsedCompilerOptions(
     );
 }
 
+export interface CompilerOptionsResult {
+    bundleOutDir?: string;
+    compilerOptions: ts.CompilerOptions;
+}
+
 export function getCompilerOptions(opts: {
     tsconfig:
         | ResolvedTSConfig
@@ -33,7 +38,7 @@ export function getCompilerOptions(opts: {
     pluginOptions: DTSPluginOpts;
     esbuildOptions: BuildOptions;
     willBundleDeclarations: boolean;
-}) {
+}): CompilerOptionsResult {
     const sourceCompilerOptions = opts.tsconfig.compilerOptions ?? {};
     const compilerOptions = isParsedCompilerOptions(sourceCompilerOptions)
         ? { ...sourceCompilerOptions }
@@ -45,39 +50,43 @@ export function getCompilerOptions(opts: {
     compilerOptions.declaration = true;
     compilerOptions.emitDeclarationOnly = true;
 
-    if (!compilerOptions.declarationDir) {
-        compilerOptions.declarationDir =
-            compilerOptions.declarationDir ??
-            opts.esbuildOptions.outdir ??
-            compilerOptions.outDir;
+    const bundleOutDir =
+        compilerOptions.declarationDir ??
+        opts.esbuildOptions.outdir ??
+        compilerOptions.outDir;
+
+    compilerOptions.declarationDir = bundleOutDir;
+
+    const cacheDir = resolve(tmpdir(), "esbuild-plugin-d.ts");
+    const cacheRoot = opts.pluginOptions.buildInfoDir ?? cacheDir;
+    const configHash = createHash("sha256")
+        .update(
+            JSON.stringify({
+                compilerOptions,
+                __buildContext: opts.pluginOptions?.__buildContext,
+                willBundleDeclarations: opts.willBundleDeclarations,
+            }),
+        )
+        .digest("hex");
+
+    if (compilerOptions.incremental && !compilerOptions.tsBuildInfoFile) {
+        compilerOptions.tsBuildInfoFile = resolve(
+            cacheRoot,
+            `esbuild-plugin-dts-${configHash}.tsbuildinfo`,
+        );
     }
 
     if (opts.willBundleDeclarations) {
         compilerOptions.declarationDir = resolve(
-            compilerOptions.declarationDir!,
-            "dts-prebundle",
-        );
-    }
-
-    if (compilerOptions.incremental && !compilerOptions.tsBuildInfoFile) {
-        const configHash = createHash("sha256")
-            .update(
-                JSON.stringify({
-                    compilerOptions,
-                    __buildContext: opts.pluginOptions?.__buildContext,
-                }),
-            )
-            .digest("hex");
-
-        const cacheDir = resolve(tmpdir(), "esbuild-plugin-d.ts");
-
-        compilerOptions.tsBuildInfoFile = resolve(
-            opts.pluginOptions.buildInfoDir ?? cacheDir,
-            `esbuild-plugin-dts-${configHash}.tsbuildinfo`,
+            cacheRoot,
+            `esbuild-plugin-dts-${configHash}-prebundle`,
         );
     }
 
     compilerOptions.listEmittedFiles = true;
 
-    return compilerOptions;
+    return {
+        compilerOptions,
+        bundleOutDir: opts.willBundleDeclarations ? bundleOutDir : undefined,
+    };
 }
