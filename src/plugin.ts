@@ -7,6 +7,7 @@ import ts from "typescript";
 import { humanizeFileSize } from "@/lib";
 import { generateBundle } from "@/lib/generateBundle";
 import { getCompilerOptions } from "@/lib/getCompilerOptions";
+import { clearStaleBuildInfo } from "@/lib/incremental";
 import { createLogger } from "@/lib/logger";
 import { resolveTSConfig } from "@/lib/resolveTSConfig";
 import type { DTSPluginOpts } from "@/types/options";
@@ -38,6 +39,10 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 esbuildOptions: build.initialOptions,
                 willBundleDeclarations,
             });
+            const parsedCommandLine =
+                "parsedCommandLine" in config
+                    ? config.parsedCommandLine
+                    : undefined;
 
             const compilerHost = compilerOptions.incremental
                 ? ts.createIncrementalCompilerHost(compilerOptions)
@@ -70,6 +75,12 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 let compilerProgram;
 
                 if (compilerOptions.incremental) {
+                    clearStaleBuildInfo(
+                        inputFiles,
+                        compilerOptions,
+                        parsedCommandLine,
+                    );
+
                     compilerProgram = ts.createIncrementalProgram({
                         options: compilerOptions,
                         host: compilerHost,

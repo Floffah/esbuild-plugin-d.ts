@@ -2,4 +2,4 @@
 "esbuild-plugin-d.ts": major
 ---
 
-refactor: only export plugins & options type
+refactor: only export plugin itself & options type
