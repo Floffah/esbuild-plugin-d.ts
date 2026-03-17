@@ -6,7 +6,7 @@ import ts from "typescript";
 function resolveModulePath(path: string) {
     try {
         return require.resolve(path);
-    } catch (e) {
+    } catch {
         return undefined;
     }
 }

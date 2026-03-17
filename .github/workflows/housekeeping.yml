@@ -1,14 +1,15 @@
-name: Lint
+name: Housekeeping
 
 on: [push, pull_request]
 
 jobs:
-  lint:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
+      - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
-      - run: bunx prettier --check src
+      - run: bun run build
       - run: bun run lint
       - run: bunx tsc --noEmit --emitDeclarationOnly false
+      - run: bun run test

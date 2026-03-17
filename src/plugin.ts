@@ -122,7 +122,7 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 const emitResult = compilerProgram.emit();
 
                 if (willBundleDeclarations) {
-                    let entryPoints: string[] = [];
+                    let entryPoints: string[];
 
                     if (Array.isArray(build.initialOptions.entryPoints)) {
                         entryPoints = build.initialOptions.entryPoints.map(
