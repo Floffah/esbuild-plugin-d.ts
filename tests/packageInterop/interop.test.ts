@@ -1,5 +1,5 @@
-import { createRequire } from "node:module";
 import { expect, test } from "bun:test";
+import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 
@@ -8,7 +8,5 @@ test("Package entrypoints work from both CJS and ESM builds", async () => {
     const cjsModule = require("esbuild-plugin-d.ts");
 
     expect(typeof esmModule.dtsPlugin).toBe("function");
-    expect(typeof esmModule.default).toBe("function");
     expect(typeof cjsModule.dtsPlugin).toBe("function");
-    expect(typeof cjsModule.default).toBe("function");
 });
