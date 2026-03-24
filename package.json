@@ -40,7 +40,7 @@
         "provenance": true
     },
     "peerDependencies": {
-        "typescript": "*"
+        "typescript": ">=5.5.0 <6"
     },
     "dependencies": {
         "chalk": "4.1.2",
