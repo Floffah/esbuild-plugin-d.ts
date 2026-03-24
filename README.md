@@ -16,7 +16,7 @@ This plugin was made to make it easier to build declarations without running two
 - Minimum node version is now v20.
 - Removed default export, must use dtsPlugin named export.
 - Removed helper exports, only plugin and types remain.
-  - If people rely on this, I'm happy to add some of it back in a future version
+  - If people rely on this, I'm happy to add some of it back in a future version.
 
 ## Usage
 
@@ -41,7 +41,7 @@ The plugin uses the typescript compiler api. You don't need to enable declaratio
 
 The plugin does not enable incremental mode unless `incremental` is set to true in your tsconfig. When this is enabled, the plugin will automatically assume a tsbuildinfo file but will respect your config if set there.
 
-Be aware that if you delete your dist folder and have incremental mode enabled, your declarations may not be built.
+When no `tsBuildInfoFile` is configured, the plugin stores incremental build info in the OS temp directory by default. Deleting your output directory should not prevent the next incremental build from recreating declarations.
 
 ### Bundling
 

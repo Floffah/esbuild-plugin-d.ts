@@ -10,7 +10,7 @@ describe("TSConfig extends is resolved", () => {
             configPath: resolve(__dirname, "./tsconfig.json"),
         });
 
-        const compilerOptions = getCompilerOptions({
+        const { compilerOptions } = getCompilerOptions({
             tsconfig,
             pluginOptions: {},
             esbuildOptions: {},
@@ -26,7 +26,7 @@ describe("TSConfig extends is resolved", () => {
             configPath: resolve(__dirname, "./tsconfig.extendsModule.json"),
         });
 
-        const compilerOptions = getCompilerOptions({
+        const { compilerOptions } = getCompilerOptions({
             tsconfig,
             pluginOptions: {},
             esbuildOptions: {},

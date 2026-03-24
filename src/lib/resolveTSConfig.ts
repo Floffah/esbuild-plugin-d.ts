@@ -3,6 +3,7 @@ import ts from "typescript";
 
 export interface ResolvedTSConfig {
     compilerOptions: ts.CompilerOptions;
+    parsedCommandLine?: ts.ParsedCommandLine;
 }
 
 function normalizeConfigPath(configPath: string, searchPath?: string) {
@@ -82,6 +83,7 @@ export function resolveTSConfig(opts: {
     return {
         config: {
             compilerOptions: parsed.options,
+            parsedCommandLine: parsed,
         },
         configPath,
     };

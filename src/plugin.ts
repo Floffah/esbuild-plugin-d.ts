@@ -7,6 +7,7 @@ import ts from "typescript";
 import { humanizeFileSize } from "@/lib";
 import { generateBundle } from "@/lib/generateBundle";
 import { getCompilerOptions } from "@/lib/getCompilerOptions";
+import { clearStaleBuildInfo, getEmitCommandLine } from "@/lib/incremental";
 import { createLogger } from "@/lib/logger";
 import { resolveTSConfig } from "@/lib/resolveTSConfig";
 import type { DTSPluginOpts } from "@/types/options";
@@ -32,12 +33,16 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 !!opts.experimentalBundling &&
                 Array.isArray(build.initialOptions.entryPoints);
 
-            const compilerOptions = getCompilerOptions({
+            const { bundleOutDir, compilerOptions } = getCompilerOptions({
                 tsconfig: config,
                 pluginOptions: opts,
                 esbuildOptions: build.initialOptions,
                 willBundleDeclarations,
             });
+            const parsedCommandLine =
+                "parsedCommandLine" in config
+                    ? config.parsedCommandLine
+                    : undefined;
 
             const compilerHost = compilerOptions.incremental
                 ? ts.createIncrementalCompilerHost(compilerOptions)
@@ -70,6 +75,19 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 let compilerProgram;
 
                 if (compilerOptions.incremental) {
+                    const emitCommandLine = getEmitCommandLine({
+                        tsconfig: config,
+                        compilerOptions,
+                        inputFiles,
+                        parsedCommandLine,
+                    });
+
+                    clearStaleBuildInfo(
+                        inputFiles,
+                        compilerOptions,
+                        emitCommandLine,
+                    );
+
                     compilerProgram = ts.createIncrementalProgram({
                         options: compilerOptions,
                         host: compilerHost,
@@ -103,11 +121,11 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                             },
                     );
 
-                const errors = diagnostics
+                const errors: PartialMessage[] = diagnostics
                     .filter((d) => d.category === ts.DiagnosticCategory.Error)
                     .map(({ category: _, ...message }) => message);
 
-                const warnings = diagnostics
+                const warnings: PartialMessage[] = diagnostics
                     .filter((d) => d.category === ts.DiagnosticCategory.Warning)
                     .map(({ category: _, ...message }) => message);
 
@@ -122,6 +140,19 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 const emitResult = compilerProgram.emit();
 
                 if (willBundleDeclarations) {
+                    if (!bundleOutDir) {
+                        errors.push({
+                            text:
+                                "Declaration bundling is enabled, but no output directory was provided. " +
+                                "Please configure one via `compilerOptions.declarationDir`, esbuild `outdir`, " +
+                                "or `compilerOptions.outDir`.",
+                        });
+                        return {
+                            errors,
+                            warnings,
+                        };
+                    }
+
                     let entryPoints: string[];
 
                     if (Array.isArray(build.initialOptions.entryPoints)) {
@@ -138,6 +169,7 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                     generateBundle(
                         entryPoints,
                         compilerOptions,
+                        bundleOutDir,
                         configPath,
                         config,
                     );

@@ -2,4 +2,4 @@
 "esbuild-plugin-d.ts": minor
 ---
 
-fix: use real typescript compiler options resolving rather than merging
+fix: use real typescript compiler options resolution rather than merging

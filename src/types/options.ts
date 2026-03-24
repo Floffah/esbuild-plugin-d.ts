@@ -11,8 +11,8 @@ export interface DTSPluginOpts {
      */
     tsconfig?: string | TsConfigJson;
     /**
-     * Directory to store build info files in (only if using incremental builds and no tsBuildInfoFile is defined in tsconfig)
-     * @default os tmp directory
+     * Directory to store build info files in when using incremental builds and no tsBuildInfoFile is defined in tsconfig.
+     * Defaults to an esbuild-plugin-d.ts directory under the OS temp directory.
      */
     buildInfoDir?: string;
     /**

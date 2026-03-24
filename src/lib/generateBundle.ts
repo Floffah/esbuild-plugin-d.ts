@@ -43,6 +43,7 @@ function getHighestCommonDirectory(paths: string[]): string {
 export function generateBundle(
     entryPoints: string[],
     compilerOptions: ts.CompilerOptions,
+    bundleOutDir: string,
     tsconfigPath?: string,
     originalConfig?: any,
 ) {
@@ -51,8 +52,6 @@ export function generateBundle(
     const relativeDeclarationPaths = entryPoints.map((entry) =>
         entry.replace(commonOutDir + "/", "").replace(/\.tsx?$/, ".d.ts"),
     );
-    const postbundleOutDir = resolve(compilerOptions.declarationDir!, "..");
-
     let shouldDeleteTsConfig = false;
     if (!tsconfigPath && originalConfig) {
         const tempid = randomBytes(6).toString("hex");
@@ -67,7 +66,7 @@ export function generateBundle(
                     ...originalConfig.compilerOptions,
                     declaration: true,
                     emitDeclarationOnly: true,
-                    declarationDir: postbundleOutDir,
+                    declarationDir: bundleOutDir,
                 },
                 include: entryPoints,
             }),
@@ -94,13 +93,9 @@ export function generateBundle(
                 continue;
             }
 
-            const outputPath = resolve(postbundleOutDir, originalPath);
+            const outputPath = resolve(bundleOutDir, originalPath);
 
             writeFileSync(outputPath, bundle);
-        }
-
-        if (compilerOptions.declarationDir!.endsWith("dts-prebundle")) {
-            rmSync(compilerOptions.declarationDir!, { recursive: true });
         }
     } finally {
         if (shouldDeleteTsConfig && tsconfigPath) {
