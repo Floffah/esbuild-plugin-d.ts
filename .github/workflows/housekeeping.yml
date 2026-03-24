@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20, 22]
+        typescript-version: [5.5.2, 5]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -15,6 +16,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
+      - run: bun add --no-save --exact typescript@${{ matrix.typescript-version }}
       - run: bun run build
       - run: bun run lint
       - run: bunx tsc --noEmit
