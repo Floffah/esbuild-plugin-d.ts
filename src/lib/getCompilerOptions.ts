@@ -4,8 +4,8 @@ import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import ts from "typescript";
 
-import type { DTSPluginOpts } from "@/types";
 import type { ResolvedTSConfig } from "@/lib/resolveTSConfig";
+import type { DTSPluginOpts } from "@/types";
 
 function isParsedCompilerOptions(
     compilerOptions: unknown,
@@ -59,12 +59,17 @@ export function getCompilerOptions(opts: {
 
     const cacheDir = resolve(tmpdir(), "esbuild-plugin-d.ts");
     const cacheRoot = opts.pluginOptions.buildInfoDir ?? cacheDir;
+    const projectIdentifier =
+        typeof compilerOptions.configFilePath === "string"
+            ? compilerOptions.configFilePath
+            : opts.esbuildOptions.absWorkingDir ?? process.cwd();
     const configHash = createHash("sha256")
         .update(
             JSON.stringify({
                 compilerOptions,
                 __buildContext: opts.pluginOptions?.__buildContext,
                 willBundleDeclarations: opts.willBundleDeclarations,
+                projectIdentifier,
             }),
         )
         .digest("hex");

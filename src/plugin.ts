@@ -121,11 +121,11 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                             },
                     );
 
-                const errors = diagnostics
+                const errors: PartialMessage[] = diagnostics
                     .filter((d) => d.category === ts.DiagnosticCategory.Error)
                     .map(({ category: _, ...message }) => message);
 
-                const warnings = diagnostics
+                const warnings: PartialMessage[] = diagnostics
                     .filter((d) => d.category === ts.DiagnosticCategory.Warning)
                     .map(({ category: _, ...message }) => message);
 
@@ -140,6 +140,19 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 const emitResult = compilerProgram.emit();
 
                 if (willBundleDeclarations) {
+                    if (!bundleOutDir) {
+                        errors.push({
+                            text:
+                                "Declaration bundling is enabled, but no output directory was provided. " +
+                                "Please configure one via `compilerOptions.declarationDir`, esbuild `outdir`, " +
+                                "or `compilerOptions.outDir`.",
+                        });
+                        return {
+                            errors,
+                            warnings,
+                        };
+                    }
+
                     let entryPoints: string[];
 
                     if (Array.isArray(build.initialOptions.entryPoints)) {
@@ -156,7 +169,7 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                     generateBundle(
                         entryPoints,
                         compilerOptions,
-                        bundleOutDir!,
+                        bundleOutDir,
                         configPath,
                         config,
                     );
