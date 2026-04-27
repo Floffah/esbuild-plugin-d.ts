@@ -47,6 +47,10 @@ function getHighestCommonDirectory(paths: string[]): string {
 }
 
 function replaceDeclarationExtension(path: string) {
+    if (/\.d\.[cm]?ts$/.test(path)) {
+        return path;
+    }
+
     if (/\.[cm]?[tj]sx?$/.test(path)) {
         return path.replace(/\.[cm]?[tj]sx?$/, ".d.ts");
     }

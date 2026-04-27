@@ -1,7 +1,6 @@
 import { clearDistDir, distDir, readOutputFile } from "../_utils";
 import { expect, test } from "bun:test";
 import { build } from "esbuild";
-import { dtsPlugin } from "esbuild-plugin-d.ts";
 import { existsSync, readFileSync } from "fs";
 import { tmpdir } from "node:os";
 import { resolve } from "path";
@@ -14,6 +13,7 @@ import {
     resolveTSConfig,
 } from "@/lib";
 import { getEmitCommandLine } from "@/lib/incremental.ts";
+import { dtsPlugin } from "@/plugin";
 
 test("Incremental mode", async () => {
     const tsconfig = resolve(__dirname, "./tsconfig.json");

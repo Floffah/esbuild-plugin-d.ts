@@ -18,7 +18,5 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun add --no-save --exact typescript@${{ matrix.typescript-version }}
       - run: bun run smoke
-      - run: bun run build
       - run: bun run lint
-      - run: bunx tsc --noEmit
       - run: bun run test

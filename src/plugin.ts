@@ -15,15 +15,24 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
         name: "dts-plugin",
         async setup(build) {
             const log = createLogger(build.initialOptions.logLevel);
+            let warnedRemovedOutDirOption = false;
 
             if ("outDir" in opts) {
-                build.onStart(() => ({
-                    warnings: [
-                        {
-                            text: 'The dtsPlugin "outDir" option was removed in v2 and is ignored. Use "compilerOptions.declarationDir" in your tsconfig, or esbuild "outdir", instead.',
-                        },
-                    ],
-                }));
+                build.onStart(() => {
+                    if (warnedRemovedOutDirOption) {
+                        return;
+                    }
+
+                    warnedRemovedOutDirOption = true;
+
+                    return {
+                        warnings: [
+                            {
+                                text: 'The dtsPlugin "outDir" option was removed in v2 and is ignored. Use "compilerOptions.declarationDir" in your tsconfig, or esbuild "outdir", instead.',
+                            },
+                        ],
+                    };
+                });
             }
 
             const { config, configPath } =
