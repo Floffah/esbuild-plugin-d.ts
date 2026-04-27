@@ -1,23 +1,28 @@
-import { dtsPlugin } from "esbuild-plugin-d.ts";
 import { clearDistDir, distDir, readOutputFile } from "../_utils";
 import { expect, test } from "bun:test";
 import { build } from "esbuild";
+import { dtsPlugin } from "esbuild-plugin-d.ts";
 import { existsSync, readFileSync } from "fs";
 import { tmpdir } from "node:os";
 import { resolve } from "path";
-import ts from "typescript";
 import type { TsConfigJson } from "type-fest";
+import ts from "typescript";
 
-import { getCompilerOptions } from "../../src/lib/getCompilerOptions";
-import { getEmitCommandLine } from "../../src/lib/incremental";
-import { resolveTSConfig } from "../../src/lib/resolveTSConfig";
+import {
+    type InternalPluginOptions,
+    getCompilerOptions,
+    resolveTSConfig,
+} from "@/lib";
+import { getEmitCommandLine } from "@/lib/incremental.ts";
 
 test("Incremental mode", async () => {
     const tsconfig = resolve(__dirname, "./tsconfig.json");
     const __buildContext = Date.now();
 
     await build({
-        plugins: [dtsPlugin({ tsconfig, __buildContext })],
+        plugins: [
+            dtsPlugin({ tsconfig, __buildContext } as InternalPluginOptions),
+        ],
         entryPoints: [resolve(__dirname, "./inputs/incremental.ts")],
         outdir: distDir,
         tsconfig,
@@ -30,7 +35,9 @@ test("Incremental mode", async () => {
     clearDistDir();
 
     await build({
-        plugins: [dtsPlugin({ tsconfig, __buildContext })],
+        plugins: [
+            dtsPlugin({ tsconfig, __buildContext } as InternalPluginOptions),
+        ],
         entryPoints: [resolve(__dirname, "./inputs/incremental.ts")],
         outdir: distDir,
         tsconfig,
@@ -91,7 +98,13 @@ test("Incremental bundling rebuilds bundled outputs after dist is deleted", asyn
     const __buildContext = "incremental-bundling";
 
     await build({
-        plugins: [dtsPlugin({ tsconfig, experimentalBundling: true, __buildContext })],
+        plugins: [
+            dtsPlugin({
+                tsconfig,
+                experimentalBundling: true,
+                __buildContext,
+            } as InternalPluginOptions),
+        ],
         entryPoints,
         outdir: distDir,
         tsconfig,
@@ -104,7 +117,13 @@ test("Incremental bundling rebuilds bundled outputs after dist is deleted", asyn
     clearDistDir();
 
     await build({
-        plugins: [dtsPlugin({ tsconfig, experimentalBundling: true, __buildContext })],
+        plugins: [
+            dtsPlugin({
+                tsconfig,
+                experimentalBundling: true,
+                __buildContext,
+            } as InternalPluginOptions),
+        ],
         entryPoints,
         outdir: distDir,
         tsconfig,
@@ -158,7 +177,7 @@ test("Object tsconfig incremental mode preserves nested declaration output paths
             dtsPlugin({
                 tsconfig,
                 __buildContext: "object-tsconfig-incremental",
-            }),
+            } as InternalPluginOptions),
         ],
         entryPoints: [entryPoint],
         outdir: distDir,
@@ -175,7 +194,7 @@ test("Object tsconfig incremental mode preserves nested declaration output paths
             dtsPlugin({
                 tsconfig,
                 __buildContext: "object-tsconfig-incremental",
-            }),
+            } as InternalPluginOptions),
         ],
         entryPoints: [entryPoint],
         outdir: distDir,

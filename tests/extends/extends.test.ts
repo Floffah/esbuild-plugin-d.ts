@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { resolve } from "path";
 
-import { getCompilerOptions } from "../../src/lib/getCompilerOptions";
-import { resolveTSConfig } from "../../src/lib/resolveTSConfig";
+import { getCompilerOptions } from "@/lib";
+import { resolveTSConfig } from "@/lib";
 
 describe("TSConfig extends is resolved", () => {
     test("Relative path", async () => {

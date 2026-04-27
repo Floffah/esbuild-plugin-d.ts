@@ -18,6 +18,7 @@ This plugin was made to make it easier to build declarations without running two
 - Removed default export, must use dtsPlugin named export.
 - Removed helper exports, only plugin and types remain.
   - If people rely on this, I'm happy to add some of it back in a future version.
+- Removed the deprecated `outDir` plugin option. Use `compilerOptions.declarationDir` in your tsconfig, or esbuild `outdir`, instead.
 
 ## Usage
 
@@ -66,8 +67,9 @@ Once proven to be stable, this will be enabled when `bundle` is set to true in E
 
 ### Options
 
-- `outDir: string` (DEPRECATED) - override the output directory - you should define declarationDir in your tsconfig instead. The plugin will also fall back to your tsconfig outDir or esbuild outdir
 - `tsconfig: string | object` - A path to your tsconfig or a tsconfig object. The plugin will automatically find your tsconfig if you don't specify one.
+- `buildInfoDir: string` - Directory to store incremental build info files when using incremental builds and no `tsBuildInfoFile` is defined in tsconfig.
+- `experimentalBundling: boolean` - Enable experimental declaration bundling support.
 
 All other functionality is derived from your tsconfig
 

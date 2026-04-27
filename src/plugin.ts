@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 import ts from "typescript";
 
 import { humanizeFileSize } from "@/lib";
-import { generateBundle } from "@/lib/generateBundle";
+import { generateBundle, resolveBundleEntryPoints } from "@/lib/generateBundle";
 import { getCompilerOptions } from "@/lib/getCompilerOptions";
 import { clearStaleBuildInfo, getEmitCommandLine } from "@/lib/incremental";
 import { createLogger } from "@/lib/logger";
@@ -18,6 +18,16 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
         async setup(build) {
             const log = createLogger(build.initialOptions.logLevel);
 
+            if ("outDir" in opts) {
+                build.onStart(() => ({
+                    warnings: [
+                        {
+                            text: 'The dtsPlugin "outDir" option was removed in v2 and is ignored. Use "compilerOptions.declarationDir" in your tsconfig, or esbuild "outdir", instead.',
+                        },
+                    ],
+                }));
+            }
+
             const { config, configPath } =
                 opts.tsconfig && typeof opts.tsconfig !== "string"
                     ? { config: opts.tsconfig, configPath: undefined }
@@ -25,13 +35,9 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                           configPath: opts.tsconfig,
                       });
 
-            // TODO: uncomment once proven to work
-            // const willBundleDeclarations =
-            //     !!build.initialOptions.bundle &&
-            //     Array.isArray(build.initialOptions.entryPoints);
             const willBundleDeclarations =
                 !!opts.experimentalBundling &&
-                Array.isArray(build.initialOptions.entryPoints);
+                !!build.initialOptions.entryPoints;
 
             const { bundleOutDir, compilerOptions } = getCompilerOptions({
                 tsconfig: config,
@@ -140,6 +146,18 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                 const emitResult = compilerProgram.emit();
 
                 if (willBundleDeclarations) {
+                    const entryPoints = build.initialOptions.entryPoints;
+
+                    if (!entryPoints) {
+                        errors.push({
+                            text: "Declaration bundling is enabled, but no entry points were provided.",
+                        });
+                        return {
+                            errors,
+                            warnings,
+                        };
+                    }
+
                     if (!bundleOutDir) {
                         errors.push({
                             text:
@@ -153,25 +171,18 @@ export const dtsPlugin = (opts: DTSPluginOpts = {}) =>
                         };
                     }
 
-                    let entryPoints: string[];
-
-                    if (Array.isArray(build.initialOptions.entryPoints)) {
-                        entryPoints = build.initialOptions.entryPoints.map(
-                            (entry: string | { in: string }) =>
-                                typeof entry === "string" ? entry : entry.in,
-                        );
-                    } else {
-                        entryPoints = Object.values(
-                            build.initialOptions.entryPoints!,
-                        );
-                    }
-
                     generateBundle(
-                        entryPoints,
+                        resolveBundleEntryPoints(entryPoints),
                         compilerOptions,
                         bundleOutDir,
                         configPath,
                         config,
+                        getEmitCommandLine({
+                            tsconfig: config,
+                            compilerOptions,
+                            inputFiles: inputFiles,
+                            parsedCommandLine,
+                        }),
                     );
                 }
 

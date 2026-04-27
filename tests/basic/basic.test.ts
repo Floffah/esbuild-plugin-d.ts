@@ -16,3 +16,24 @@ test("Basic config", async () => {
 
     expect(readOutputFile("basic")).toMatchSnapshot();
 });
+
+test("Warns when removed outDir plugin option is used", async () => {
+    const tsconfig = resolve(__dirname, "./tsconfig.json");
+
+    const result = await build({
+        plugins: [
+            dtsPlugin({
+                tsconfig,
+                outDir: distDir,
+            } as Parameters<typeof dtsPlugin>[0] & { outDir: string }),
+        ],
+        entryPoints: [resolve(__dirname, "./inputs/basic.ts")],
+        outdir: distDir,
+        tsconfig,
+        logLevel: "silent",
+    });
+
+    expect(result.warnings.map((warning) => warning.text)).toContain(
+        'The dtsPlugin "outDir" option was removed in v2 and is ignored. Use "compilerOptions.declarationDir" in your tsconfig, or esbuild "outdir", instead.',
+    );
+});
