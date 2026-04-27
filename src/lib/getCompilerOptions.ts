@@ -29,13 +29,20 @@ export interface CompilerOptionsResult {
     compilerOptions: ts.CompilerOptions;
 }
 
+export interface InternalPluginOptions extends DTSPluginOpts {
+    /**
+     * Test-only cache salt for isolating incremental builds that share the same tsconfig.
+     */
+    __buildContext?: unknown;
+}
+
 export function getCompilerOptions(opts: {
     tsconfig:
         | ResolvedTSConfig
         | {
               compilerOptions?: Record<string, unknown>;
           };
-    pluginOptions: DTSPluginOpts;
+    pluginOptions: InternalPluginOptions;
     esbuildOptions: BuildOptions;
     willBundleDeclarations: boolean;
 }): CompilerOptionsResult {

@@ -1,11 +1,15 @@
-import { distDir, readOutputFile } from "../_utils";
+import { clearDistDir, distDir, readOutputFile } from "../_utils";
 import { expect, test } from "bun:test";
 import { build } from "esbuild";
-import { dtsPlugin } from "esbuild-plugin-d.ts";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "path";
 import type { TsConfigJson } from "type-fest";
 
+import { dtsPlugin } from "@/plugin";
+
 test("Basic config", async () => {
+    clearDistDir();
+
     const tsconfig = resolve(__dirname, "./tsconfig.json");
 
     await build({
@@ -24,6 +28,8 @@ test("Basic config", async () => {
 });
 
 test("Pass tsconfig as object", async () => {
+    clearDistDir();
+
     const tsconfig: TsConfigJson = {
         compilerOptions: {
             emitDeclarationOnly: true,
@@ -31,6 +37,7 @@ test("Pass tsconfig as object", async () => {
             target: "es6",
             module: "commonjs",
             lib: ["dom", "es6", "es2017", "esnext.asynciterable"],
+            rootDir: resolve(__dirname, "./inputs"),
             types: [],
         },
     };
@@ -47,4 +54,99 @@ test("Pass tsconfig as object", async () => {
     });
 
     expect(readOutputFile("bundle")).toMatchSnapshot();
+});
+
+test("Supports object entry points with custom output paths", async () => {
+    clearDistDir();
+
+    const tsconfig = resolve(__dirname, "./tsconfig.json");
+
+    await build({
+        plugins: [dtsPlugin({ tsconfig, experimentalBundling: true })],
+        entryPoints: {
+            "public/api": resolve(__dirname, "./inputs/bundle.ts"),
+            "public/secondary": resolve(__dirname, "./inputs/secondBundle.ts"),
+        },
+        outdir: distDir,
+        tsconfig,
+        bundle: true,
+    });
+
+    expect(readOutputFile("public/api")).toMatchSnapshot();
+    expect(readOutputFile("public/secondary")).toMatchSnapshot();
+});
+
+test("Supports object entry points with declaration-suffixed output paths", async () => {
+    clearDistDir();
+
+    const tsconfig = resolve(__dirname, "./tsconfig.json");
+
+    await build({
+        plugins: [dtsPlugin({ tsconfig, experimentalBundling: true })],
+        entryPoints: {
+            "declared/api.d.ts": resolve(__dirname, "./inputs/bundle.ts"),
+        },
+        outdir: distDir,
+        tsconfig,
+        bundle: true,
+    });
+
+    expect(existsSync(resolve(distDir, "declared/api.d.ts"))).toBe(true);
+    expect(existsSync(resolve(distDir, "declared/api.d.d.ts"))).toBe(false);
+    expect(
+        readFileSync(resolve(distDir, "declared/api.d.ts"), "utf-8"),
+    ).toContain("export declare function a(): string;");
+});
+
+test("Supports array entry points with custom output paths", async () => {
+    clearDistDir();
+
+    const tsconfig = resolve(__dirname, "./tsconfig.json");
+
+    await build({
+        plugins: [dtsPlugin({ tsconfig, experimentalBundling: true })],
+        entryPoints: [
+            {
+                in: resolve(__dirname, "./inputs/bundle.ts"),
+                out: "entries/api",
+            },
+            {
+                in: resolve(__dirname, "./inputs/secondBundle.ts"),
+                out: "entries/secondary",
+            },
+        ],
+        outdir: distDir,
+        tsconfig,
+        bundle: true,
+    });
+
+    expect(readOutputFile("entries/api")).toMatchSnapshot();
+    expect(readOutputFile("entries/secondary")).toMatchSnapshot();
+});
+
+test("Supports array entry points with declaration-suffixed output paths", async () => {
+    clearDistDir();
+
+    const tsconfig = resolve(__dirname, "./tsconfig.json");
+
+    await build({
+        plugins: [dtsPlugin({ tsconfig, experimentalBundling: true })],
+        entryPoints: [
+            {
+                in: resolve(__dirname, "./inputs/bundle.ts"),
+                out: "declared/array-api.d.ts",
+            },
+        ],
+        outdir: distDir,
+        tsconfig,
+        bundle: true,
+    });
+
+    expect(existsSync(resolve(distDir, "declared/array-api.d.ts"))).toBe(true);
+    expect(existsSync(resolve(distDir, "declared/array-api.d.d.ts"))).toBe(
+        false,
+    );
+    expect(
+        readFileSync(resolve(distDir, "declared/array-api.d.ts"), "utf-8"),
+    ).toContain("export declare function b(): string;");
 });

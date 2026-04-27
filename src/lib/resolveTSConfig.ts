@@ -64,7 +64,7 @@ export function resolveTSConfig(opts: {
     config: ResolvedTSConfig;
     configPath: string;
 } {
-    let configPath =
+    const configPath =
         opts.configPath ??
         ts.findConfigFile(
             opts.searchPath ?? process.cwd(),
@@ -76,15 +76,18 @@ export function resolveTSConfig(opts: {
         throw new Error("No config file found");
     }
 
-    configPath = normalizeConfigPath(configPath, opts.searchPath);
+    const normalizedConfigPath = normalizeConfigPath(
+        configPath,
+        opts.searchPath,
+    );
 
-    const parsed = parseTSConfig(configPath);
+    const parsed = parseTSConfig(normalizedConfigPath);
 
     return {
         config: {
             compilerOptions: parsed.options,
             parsedCommandLine: parsed,
         },
-        configPath,
+        configPath: normalizedConfigPath,
     };
 }

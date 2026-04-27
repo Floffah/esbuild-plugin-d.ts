@@ -2,11 +2,6 @@ import type { TsConfigJson } from "type-fest";
 
 export interface DTSPluginOpts {
     /**
-     * override the directory to output to.
-     * @deprecated define declarationDir in tsconfig instead
-     */
-    outDir?: string;
-    /**
      * path to the tsconfig to use. (some monorepos might need to use this)
      */
     tsconfig?: string | TsConfigJson;
@@ -19,8 +14,4 @@ export interface DTSPluginOpts {
      * EXPERIMENTAL: Set to true to bundle the declarations into single files
      */
     experimentalBundling?: boolean;
-    /**
-     * For testing purposes, allows adding a context to different builds with the same tsconfig.
-     */
-    __buildContext?: any;
 }
