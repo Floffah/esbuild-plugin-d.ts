@@ -1,9 +1,9 @@
+import { includeIgnoreFile } from "@eslint/compat";
 import eslint from "@eslint/js";
 import prettier from "eslint-config-prettier/flat";
 import { defineConfig } from "eslint/config";
-import tseslint from "typescript-eslint";
 import { fileURLToPath } from "node:url";
-import { includeIgnoreFile } from "@eslint/compat";
+import tseslint from "typescript-eslint";
 
 const gitignorePath = fileURLToPath(new URL(".gitignore", import.meta.url));
 
@@ -27,6 +27,14 @@ export default defineConfig(
             ],
             "@typescript-eslint/no-var-requires": "warn",
             "comma-dangle": ["error", "always-multiline"],
+        },
+    },
+    {
+        files: ["scripts/*.mjs"],
+        languageOptions: {
+            globals: {
+                console: "readonly",
+            },
         },
     },
     includeIgnoreFile(gitignorePath, "Imported .gitignore patterns"),
