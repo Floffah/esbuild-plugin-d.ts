@@ -14,10 +14,10 @@ This plugin was made to make it easier to build declarations without running two
 ## Version 2 Breaking Changes
 
 - Minimum node version is now v20.
-- Supported TypeScript versions are now 5.5 through current 5.x.
+- Supported TypeScript versions are now 5.5 through current 6.x.
 - Removed default export, must use dtsPlugin named export.
 - Removed helper exports, only plugin and types remain.
-  - If people rely on this, I'm happy to add some of it back in a future version.
+    - If people rely on this, I'm happy to add some of it back in a future version.
 - Removed the deprecated `outDir` plugin option. Use `compilerOptions.declarationDir` in your tsconfig, or esbuild `outdir`, instead.
 
 ## Usage
@@ -40,7 +40,7 @@ build({
 ```
 
 The plugin uses the typescript compiler api. You don't need to enable declarations in your tsconfig.
-The supported TypeScript range is `>=5.5.0 <6`.
+The supported TypeScript range is `>=5.5.0 <7`.
 
 The plugin does not enable incremental mode unless `incremental` is set to true in your tsconfig. When this is enabled, the plugin will automatically assume a tsbuildinfo file but will respect your config if set there.
 
@@ -50,17 +50,18 @@ When no `tsBuildInfoFile` is configured, the plugin stores incremental build inf
 
 This plugin has experimental declaration bundling support, to enable it, set `experimentalBundling` to true in the plugin's options as follows:
 
-
 Note that this also requires you to set your entry points in ESBuild.
 
 ```js
 build({
     entryPoints: ["./test/index.ts"],
     outdir: "./dist",
-    plugins: [dtsPlugin({
-        experimentalBundling: true
-    })]
-})
+    plugins: [
+        dtsPlugin({
+            experimentalBundling: true,
+        }),
+    ],
+});
 ```
 
 Once proven to be stable, this will be enabled when `bundle` is set to true in ESBuild and will be documented properly.

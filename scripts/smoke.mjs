@@ -63,10 +63,16 @@ async function runBundledSmoke() {
     section("Experimental declaration bundling");
 
     await build({
-        entryPoints: {
-            api: resolve(fixtureDir, "bundle.ts"),
-            secondary: resolve(fixtureDir, "secondary.ts"),
-        },
+        entryPoints: [
+            {
+                in: resolve(fixtureDir, "bundle.ts"),
+                out: "public/api",
+            },
+            {
+                in: resolve(fixtureDir, "secondary.ts"),
+                out: "public/secondary",
+            },
+        ],
         outdir: resolve(distDir, "bundled"),
         tsconfig,
         bundle: true,
@@ -74,13 +80,13 @@ async function runBundledSmoke() {
         plugins: [dtsPlugin({ tsconfig, experimentalBundling: true })],
     });
 
-    readOutput(resolve(distDir, "bundled/api.d.ts"), [
+    readOutput(resolve(distDir, "bundled/public/api.d.ts"), [
         "export declare function createBasicSmokeResult",
         "export type SmokeStatus",
         "export {};",
     ]);
 
-    readOutput(resolve(distDir, "bundled/secondary.d.ts"), [
+    readOutput(resolve(distDir, "bundled/public/secondary.d.ts"), [
         "export interface SecondarySmokeReport",
         "export declare function createSecondarySmokeReport",
         "export {};",

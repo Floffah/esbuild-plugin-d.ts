@@ -34,6 +34,7 @@
         "test": "bun test",
         "deps": "bunx ncu -x chalk -x eslint",
         "lint": "bunx tsc --noEmit && bunx eslint . --ext .ts && attw --pack . && publint --package . --pack npm",
+        "check": "bun run lint && bun run test && bun run smoke",
         "release": "changeset publish"
     },
     "publishConfig": {
@@ -41,7 +42,7 @@
         "provenance": true
     },
     "peerDependencies": {
-        "typescript": ">=5.5.0 <6"
+        "typescript": ">=5.5.0 <7"
     },
     "dependencies": {
         "chalk": "4.1.2",

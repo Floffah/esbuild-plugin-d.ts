@@ -35,6 +35,7 @@ test("Pass tsconfig as object", async () => {
             target: "es6",
             module: "commonjs",
             lib: ["dom", "es6", "es2017", "esnext.asynciterable"],
+            rootDir: resolve(__dirname, "./inputs"),
             types: [],
         },
     };
