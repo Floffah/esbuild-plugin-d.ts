@@ -8,7 +8,7 @@ import { dtsPlugin } from "@/plugin";
 test("Fails on compiler error", async () => {
     const tsconfig = resolve(__dirname, "./tsconfig.json");
 
-    expect(
+    await expect(
         build({
             plugins: [dtsPlugin({ tsconfig })],
             entryPoints: [resolve(__dirname, "./inputs/compilerErrors.ts")],
