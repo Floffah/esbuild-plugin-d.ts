@@ -130,6 +130,7 @@ export function generateBundle(
     originalConfig?: any,
     commandLine?: ts.ParsedCommandLine,
 ) {
+    const outputPaths: string[] = [];
     let shouldDeleteTsConfig = false;
     if (!tsconfigPath && originalConfig) {
         const tempid = randomBytes(6).toString("hex");
@@ -179,7 +180,10 @@ export function generateBundle(
 
             mkdirSync(dirname(outputPath), { recursive: true });
             writeFileSync(outputPath, bundle);
+            outputPaths.push(outputPath);
         }
+
+        return outputPaths;
     } finally {
         if (shouldDeleteTsConfig && tsconfigPath) {
             rmSync(tsconfigPath);
